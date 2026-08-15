@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import nProgress from 'nprogress'
 
 import LoginView from '@/views/LoginView.vue'
+import RegisterView from '@/views/RegisterView.vue'
 
 import LearningView from '@/views/LoginView.vue'
 
@@ -19,6 +20,11 @@ const router = createRouter({
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/AboutView.vue'),
+    },
+    {
+      path: '/register',
+      name: 'register-view',
+      component: RegisterView
     },
   ],
 })

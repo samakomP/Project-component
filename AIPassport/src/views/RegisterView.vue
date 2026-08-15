@@ -2,48 +2,51 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import CardAuth from '@/components/CardAuth.vue'
-import { useAuthStore } from '@/stores/Auth.ts'
-import type { Auth } from '@/types'
+import { useAuthStore } from '@/stores/Auth' 
 import { useMessageStore } from '@/stores/message'
 
+import type { Auth } from '@/types'
+
 const authStore = useAuthStore()
+const messageStore = useMessageStore()
 const router = useRouter()
-const store = useMessageStore()
 
 const authData = ref<Auth>({
   username: '',
-  password: '' 
+  password: ''
 })
 
-const handleLogin = async () => {
+const handleRegister = async () => {
   const role = await authStore.login(authData.value.username)
+  
   if (role === 'admin') {
+    messageStore.updateMessage(`Registration successful! Welcome, Admin.`)
     router.push('/admin')
   } else if (role === 'user') {
+    messageStore.updateMessage(`Registration successful! Welcome to your profile.`)
     router.push('/user')
   } else {
-    store.updateMessage(`The Username ${authData.value.username} does not exist!`)
-    setTimeout(() => {
-      store.resetMessage()
-    }, 3000)
-    }
+    messageStore.updateMessage(`Access Denied: Please use Admin1, user1, or user2.`)
   }
+  setTimeout(() => {
+    messageStore.resetMessage()
+  }, 3000)
+}
 
 </script>
 
 <template>
-
   <CardAuth>
 
     <template #header>
       <div class="text-center">
-        <h1 class="text-2xl font-bold text-gray-900">Log in</h1>
+        <h1 class="text-2xl font-bold text-gray-900">Register</h1>
         <p class="text-gray-500/70 text-sm font-medium mt-1">AI Passport By So Cool and handsome</p>
       </div>
     </template>
 
     <template #default>
-      <form @submit.prevent="handleLogin" class="space-y-5">
+      <form @submit.prevent="handleRegister" class="space-y-5">
         
         <div>
           <label for="username" class="block text-sm font-medium text-gray-800 mb-2 font-serif">Username</label>
@@ -70,8 +73,8 @@ const handleLogin = async () => {
 
         <button 
           type="submit" 
-          class="btn w-full px-4 py-3 bg-gray-900 text-white text-2xl font-black rounded-xl hover:bg-gray-800 transition-colors">
-          Login
+          class="btn w-full px-4 py-3 bg-gray-900 text-white font-black text-2xl rounded-xl hover:bg-gray-800 transition-colors">
+          Register
         </button>
         
       </form>
@@ -85,9 +88,11 @@ const handleLogin = async () => {
       </div>
 
       <div class="text-center text-sm text-gray-700">
-        Don’t have any account yet? 
-        <router-link to="/register" class="text-[#0055cc] hover:text-blue-800 font-semibold inline-flex items-center gap-1">
-          Get Register <span aria-hidden="true" class="text-lg leading-none">&rarr;</span>
+
+        Already got an account?
+
+        <router-link to="/login" class="text-[#0055cc] hover:text-blue-800 font-semibold inline-flex items-center gap-1">
+          Login <span aria-hidden="true" class="text-lg leading-none">&rarr;</span>
         </router-link>
       </div>
 

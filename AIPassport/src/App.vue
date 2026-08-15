@@ -1,11 +1,17 @@
 <script setup lang="ts">
-import { RouterLink, RouterView , useRoute} from 'vue-router'
+import { RouterLink, RouterView , useRoute,} from 'vue-router'
+import { useMessageStore } from '@/stores/message'
+import { storeToRefs } from 'pinia'
 
 const route = useRoute()
+const store = useMessageStore()
+const { message } = storeToRefs(store)
+
+
 </script>
 
 <template>
-  <header v-if="route.name !== 'login-view'">
+  <header v-if="route.name !== 'login-view' && route.name !== 'register-view' ">
    <div class="wrapper">
       <nav>
         <h2>{{ route.name }}</h2>
@@ -14,6 +20,9 @@ const route = useRoute()
       </nav>
     </div>
   </header>
+  <div id="flashMessage" v-if="message" class=" fixed top-3 left-1/2 -translate-x-1/2 w-fit z-50 shadow-md rounded-3xl px-3 py-2">
+        <h4 class="text-center px-2 font-meduim text-gray-800">{{ message }}</h4>
+      </div>
 
   <RouterView />
 </template>
@@ -79,5 +88,17 @@ nav a:first-of-type {
     padding: 1rem 0;
     margin-top: 1rem;
   }
+}
+
+@keyframes yellowFade {
+  from {
+    background-color: #FCC084;
+  }
+  to {
+    background-color: transparent;
+  }
+}
+#flashMessage {
+  animation: yellowFade 3s ease-in-out;
 }
 </style>
