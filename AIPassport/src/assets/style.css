@@ -10,7 +10,7 @@ h1{
 }
 
 .box{
-    @apply w-full max-w-[460px] bg-purple-400/10  border border-purple-400/20  rounded-3xl p-8 sm:p-10 shadow-2xl;
+    @apply w-full max-w-115 bg-purple-400/10  border border-purple-400/20  rounded-3xl p-8 sm:p-10 shadow-2xl;
 }
 
 .btn{
