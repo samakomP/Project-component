@@ -20,7 +20,7 @@ const handleLogin = async () => {
   if (role === 'admin') {
     router.push('/admin')
   } else if (role === 'user') {
-    router.push('/user')
+    router.push('/home')
   } else {
     store.updateMessage(`The Username ${authData.value.username} does not exist!`)
     setTimeout(() => {
