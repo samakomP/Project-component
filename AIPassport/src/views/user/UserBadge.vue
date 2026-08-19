@@ -1,20 +1,49 @@
 <script setup lang="ts">
-
 import CardBase from '@/components/CardBase.vue'
-import PillLevel from '@/components/PillLevel.vue'
-
-
 </script>
 
 <template>
- <div class="max-w-7xl min-h-[85vh] mx-auto p-5 mt-7">
- 
-    <div class="md:col-span-2 flex flex-col gap-8">
-      <CardBase class="relative text-center p-18">
-               <PillLevel class="absolute top-5 right-6 text-2xl">
-                    Level 2
-                </PillLevel>
-            </CardBase>
-        </div>
+  <div class="w-full flex flex-col items-center mt-2 px-4 pb-8 font-serif">
+    
+    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-10 tracking-wide">
+      Your All Achievement
+    </h2>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-5 md:gap-7 w-full max-w-2xl">
+      
+      <CardBase class="!bg-[#9ef0c6] !rounded-[30px] !shadow-none aspect-square flex items-center justify-center p-4 transition">
+        <span class="text-2xl md:text-3xl font-bold text-gray-900 text-center leading-snug">
+          Level 1<br>Pass!
+        </span>
+      </CardBase>
+
+      <CardBase class="!bg-[#9ef0c6] !rounded-[30px] !shadow-none aspect-square flex items-center justify-center p-4 transition">
+        <span class="text-2xl md:text-3xl font-bold text-gray-900 text-center leading-snug">
+          Level 2<br>Pass!
+        </span>
+      </CardBase>
+
+
+      <CardBase class="!bg-[#dcdcdc] !rounded-[30px] !shadow-none aspect-square flex items-center justify-center p-4">
+        <span class="text-2xl md:text-3xl font-bold text-gray-900 text-center leading-snug">
+          Level 3
+        </span>
+      </CardBase>
+
+      <CardBase class="!bg-[#dcdcdc] !rounded-[30px] !shadow-none aspect-square flex items-center justify-center p-4">
+        <span class="text-2xl md:text-3xl font-bold text-gray-900 text-center leading-snug">
+          Level 4
+        </span>
+      </CardBase>
+
+      <CardBase class="!bg-[#dcdcdc] !rounded-[30px] !shadow-none aspect-square flex items-center justify-center p-4">
+
+      </CardBase>
+
+      <CardBase class="!bg-[#dcdcdc] !rounded-[30px] !shadow-none aspect-square flex items-center justify-center p-4">
+
+      </CardBase>
+
     </div>
+  </div>
 </template>
