@@ -1,0 +1,498 @@
+{
+  "Levels": [
+    {
+      "level_ID": 1,
+      "levelNumber": 1,
+      "passCriteria": 60
+    },
+    {
+      "level_ID": 2,
+      "levelNumber": 2,
+      "passCriteria": 70
+    },
+    {
+      "level_ID": 3,
+      "levelNumber": 3,
+      "passCriteria": 75
+    },
+    {
+      "level_ID": 4,
+      "levelNumber": 4,
+      "passCriteria": 80
+    }
+  ],
+  "Users": [
+    {
+      "users_ID": 1,
+      "username": "admin01",
+      "password": "admin123",
+      "FName": "Admin",
+      "LName": "System",
+      "role": "admin",
+      "province": "Chiang Mai",
+      "profileImg": "/images/profiles/admin01.jpg",
+      "isActivate": true,
+      "level_ID": 1
+    },
+    {
+      "users_ID": 2,
+      "username": "omsin01",
+      "password": "user123",
+      "FName": "Omsin",
+      "LName": "Demo",
+      "role": "user",
+      "province": "Chiang Mai",
+      "profileImg": "/images/profiles/omsin01.jpg",
+      "isActivate": true,
+      "level_ID": 1
+    },
+    {
+      "users_ID": 3,
+      "username": "somchai01",
+      "password": "user123",
+      "FName": "Somchai",
+      "LName": "Jaidee",
+      "role": "user",
+      "province": "Bangkok",
+      "profileImg": "/images/profiles/somchai01.jpg",
+      "isActivate": true,
+      "level_ID": 2
+    },
+    {
+      "users_ID": 4,
+      "username": "suda01",
+      "password": "user123",
+      "FName": "Suda",
+      "LName": "Dee",
+      "role": "user",
+      "province": "Phuket",
+      "profileImg": "/images/profiles/suda01.jpg",
+      "isActivate": false,
+      "level_ID": 3
+    },
+    {
+      "users_ID": 5,
+      "username": "narin01",
+      "password": "user123",
+      "FName": "Narin",
+      "LName": "Kumdee",
+      "role": "user",
+      "province": "Khon Kaen",
+      "profileImg": "/images/profiles/narin01.jpg",
+      "isActivate": true,
+      "level_ID": 2
+    }
+  ],
+  "Questions": [
+    {
+      "questions_ID": 1,
+      "level_ID": 1,
+      "questionText": "What does HTML stand for?",
+      "correctAnswer": "B"
+    },
+    {
+      "questions_ID": 2,
+      "level_ID": 1,
+      "questionText": "Which language is commonly used to style web pages?",
+      "correctAnswer": "C"
+    },
+    {
+      "questions_ID": 3,
+      "level_ID": 1,
+      "questionText": "Which symbol is commonly used to start a comment in Java?",
+      "correctAnswer": "A"
+    },
+    {
+      "questions_ID": 4,
+      "level_ID": 2,
+      "questionText": "Which keyword is used to create a class in Java?",
+      "correctAnswer": "A"
+    },
+    {
+      "questions_ID": 5,
+      "level_ID": 2,
+      "questionText": "Which data structure follows the FIFO principle?",
+      "correctAnswer": "D"
+    },
+    {
+      "questions_ID": 6,
+      "level_ID": 2,
+      "questionText": "Which HTTP method is normally used to retrieve data?",
+      "correctAnswer": "B"
+    },
+    {
+      "questions_ID": 7,
+      "level_ID": 3,
+      "questionText": "What is the average time complexity of binary search on a sorted array?",
+      "correctAnswer": "C"
+    },
+    {
+      "questions_ID": 8,
+      "level_ID": 3,
+      "questionText": "Which concept allows a class to inherit properties and methods from another class?",
+      "correctAnswer": "A"
+    },
+    {
+      "questions_ID": 9,
+      "level_ID": 4,
+      "questionText": "Which principle focuses on hiding implementation details and exposing only necessary functionality?",
+      "correctAnswer": "D"
+    },
+    {
+      "questions_ID": 10,
+      "level_ID": 4,
+      "questionText": "Which practice is most directly associated with integrating and testing code changes automatically?",
+      "correctAnswer": "B"
+    }
+  ],
+  "QuestionsOptions": [
+    {
+      "option_ID": 1,
+      "question_ID": 1,
+      "optionText": "Hyper Trainer Markup Language"
+    },
+    {
+      "option_ID": 2,
+      "question_ID": 1,
+      "optionText": "HyperText Markup Language"
+    },
+    {
+      "option_ID": 3,
+      "question_ID": 1,
+      "optionText": "HighText Machine Language"
+    },
+    {
+      "option_ID": 4,
+      "question_ID": 1,
+      "optionText": "Hyperlink Text Management Language"
+    },
+    {
+      "option_ID": 5,
+      "question_ID": 2,
+      "optionText": "HTML"
+    },
+    {
+      "option_ID": 6,
+      "question_ID": 2,
+      "optionText": "Java"
+    },
+    {
+      "option_ID": 7,
+      "question_ID": 2,
+      "optionText": "CSS"
+    },
+    {
+      "option_ID": 8,
+      "question_ID": 2,
+      "optionText": "SQL"
+    },
+    {
+      "option_ID": 9,
+      "question_ID": 3,
+      "optionText": " // "
+    },
+    {
+      "option_ID": 10,
+      "question_ID": 3,
+      "optionText": " ## "
+    },
+    {
+      "option_ID": 11,
+      "question_ID": 3,
+      "optionText": " <!-- --> "
+    },
+    {
+      "option_ID": 12,
+      "question_ID": 3,
+      "optionText": " ** "
+    },
+    {
+      "option_ID": 13,
+      "question_ID": 4,
+      "optionText": "class"
+    },
+    {
+      "option_ID": 14,
+      "question_ID": 4,
+      "optionText": "new"
+    },
+    {
+      "option_ID": 15,
+      "question_ID": 4,
+      "optionText": "object"
+    },
+    {
+      "option_ID": 16,
+      "question_ID": 4,
+      "optionText": "define"
+    },
+    {
+      "option_ID": 17,
+      "question_ID": 5,
+      "optionText": "Stack"
+    },
+    {
+      "option_ID": 18,
+      "question_ID": 5,
+      "optionText": "Tree"
+    },
+    {
+      "option_ID": 19,
+      "question_ID": 5,
+      "optionText": "Graph"
+    },
+    {
+      "option_ID": 20,
+      "question_ID": 5,
+      "optionText": "Queue"
+    },
+    {
+      "option_ID": 21,
+      "question_ID": 6,
+      "optionText": "POST"
+    },
+    {
+      "option_ID": 22,
+      "question_ID": 6,
+      "optionText": "GET"
+    },
+    {
+      "option_ID": 23,
+      "question_ID": 6,
+      "optionText": "DELETE"
+    },
+    {
+      "option_ID": 24,
+      "question_ID": 6,
+      "optionText": "PATCH"
+    },
+    {
+      "option_ID": 25,
+      "question_ID": 7,
+      "optionText": "O(1)"
+    },
+    {
+      "option_ID": 26,
+      "question_ID": 7,
+      "optionText": "O(n)"
+    },
+    {
+      "option_ID": 27,
+      "question_ID": 7,
+      "optionText": "O(log n)"
+    },
+    {
+      "option_ID": 28,
+      "question_ID": 7,
+      "optionText": "O(n²)"
+    },
+    {
+      "option_ID": 29,
+      "question_ID": 8,
+      "optionText": "Inheritance"
+    },
+    {
+      "option_ID": 30,
+      "question_ID": 8,
+      "optionText": "Encapsulation"
+    },
+    {
+      "option_ID": 31,
+      "question_ID": 8,
+      "optionText": "Polymorphism"
+    },
+    {
+      "option_ID": 32,
+      "question_ID": 8,
+      "optionText": "Abstraction"
+    },
+    {
+      "option_ID": 33,
+      "question_ID": 9,
+      "optionText": "Inheritance"
+    },
+    {
+      "option_ID": 34,
+      "question_ID": 9,
+      "optionText": "Compilation"
+    },
+    {
+      "option_ID": 35,
+      "question_ID": 9,
+      "optionText": "Iteration"
+    },
+    {
+      "option_ID": 36,
+      "question_ID": 9,
+      "optionText": "Encapsulation"
+    },
+    {
+      "option_ID": 37,
+      "question_ID": 10,
+      "optionText": "Version control"
+    },
+    {
+      "option_ID": 38,
+      "question_ID": 10,
+      "optionText": "Continuous Integration"
+    },
+    {
+      "option_ID": 39,
+      "question_ID": 10,
+      "optionText": "Manual testing"
+    },
+    {
+      "option_ID": 40,
+      "question_ID": 10,
+      "optionText": "Code formatting"
+    }
+  ],
+  "e_learning": [
+    {
+      "e_learning_ID": 1,
+      "level_ID": 1,
+      "e_learning_title": "Introduction to Programming",
+      "e_learning_videoUrl": "https://example.com/videos/level1-introduction"
+    },
+    {
+      "e_learning_ID": 2,
+      "level_ID": 1,
+      "e_learning_title": "Basic Web Development",
+      "e_learning_videoUrl": "https://example.com/videos/level1-web"
+    },
+    {
+      "e_learning_ID": 3,
+      "level_ID": 2,
+      "e_learning_title": "Java Programming Fundamentals",
+      "e_learning_videoUrl": "https://example.com/videos/level2-java"
+    },
+    {
+      "e_learning_ID": 4,
+      "level_ID": 2,
+      "e_learning_title": "Data Structures Basics",
+      "e_learning_videoUrl": "https://example.com/videos/level2-data-structures"
+    },
+    {
+      "e_learning_ID": 5,
+      "level_ID": 3,
+      "e_learning_title": "Algorithms and Complexity",
+      "e_learning_videoUrl": "https://example.com/videos/level3-algorithms"
+    },
+    {
+      "e_learning_ID": 6,
+      "level_ID": 4,
+      "e_learning_title": "Software Engineering Principles",
+      "e_learning_videoUrl": "https://example.com/videos/level4-software-engineering"
+    }
+  ],
+  "Benefits": [
+    {
+      "benefits_ID": 1,
+      "level_ID": 1,
+      "benefitName": "Starter Badge",
+      "description": "Receive a badge for completing Level 1.",
+      "badgeIcon": "/images/badges/starter.png"
+    },
+    {
+      "benefits_ID": 2,
+      "level_ID": 2,
+      "benefitName": "Intermediate Badge",
+      "description": "Unlock the intermediate learner badge.",
+      "badgeIcon": "/images/badges/intermediate.png"
+    },
+    {
+      "benefits_ID": 3,
+      "level_ID": 3,
+      "benefitName": "Advanced Badge",
+      "description": "Unlock the advanced learner badge.",
+      "badgeIcon": "/images/badges/advanced.png"
+    },
+    {
+      "benefits_ID": 4,
+      "level_ID": 4,
+      "benefitName": "Expert Badge",
+      "description": "Unlock the expert learner badge.",
+      "badgeIcon": "/images/badges/expert.png"
+    }
+  ],
+  "Services": [
+    {
+      "service_ID": 1,
+      "level_ID": 1,
+      "serviceName": "Basic Learning Resources",
+      "description": "Access learning resources available for Level 1.",
+      "badgeIcon": "/images/services/basic.png"
+    },
+    {
+      "service_ID": 2,
+      "level_ID": 2,
+      "serviceName": "Intermediate Learning Resources",
+      "description": "Access additional resources for Level 2.",
+      "badgeIcon": "/images/services/intermediate.png"
+    },
+    {
+      "service_ID": 3,
+      "level_ID": 3,
+      "serviceName": "Advanced Learning Resources",
+      "description": "Access advanced resources for Level 3.",
+      "badgeIcon": "/images/services/advanced.png"
+    },
+    {
+      "service_ID": 4,
+      "level_ID": 4,
+      "serviceName": "Expert Learning Resources",
+      "description": "Access expert-level resources for Level 4.",
+      "badgeIcon": "/images/services/expert.png"
+    }
+  ],
+  "ExamHistory": [
+    {
+      "exam_ID": 1,
+      "users_ID": 2,
+      "level_ID": 1,
+      "score": 80,
+      "result": "pass",
+      "timestamp": "2026-08-01T09:30:00+07:00"
+    },
+    {
+      "exam_ID": 2,
+      "users_ID": 2,
+      "level_ID": 2,
+      "score": 65,
+      "result": "fail",
+      "timestamp": "2026-08-03T10:15:00+07:00"
+    },
+    {
+      "exam_ID": 3,
+      "users_ID": 3,
+      "level_ID": 2,
+      "score": 85,
+      "result": "pass",
+      "timestamp": "2026-08-02T13:00:00+07:00"
+    },
+    {
+      "exam_ID": 4,
+      "users_ID": 3,
+      "level_ID": 3,
+      "score": 70,
+      "result": "fail",
+      "timestamp": "2026-08-05T14:20:00+07:00"
+    },
+    {
+      "exam_ID": 5,
+      "users_ID": 5,
+      "level_ID": 2,
+      "score": 75,
+      "result": "pass",
+      "timestamp": "2026-08-06T11:10:00+07:00"
+    },
+    {
+      "exam_ID": 6,
+      "users_ID": 4,
+      "level_ID": 3,
+      "score": 82,
+      "result": "pass",
+      "timestamp": "2026-08-07T15:45:00+07:00"
+    }
+  ]
+}

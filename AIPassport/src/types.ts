@@ -8,6 +8,15 @@ export interface MessageState {
   editMessage: string
 }
 
-export interface EventState {
-  event: Event | null
+export interface User {
+  "users_ID": number,
+  "username": string,
+  "password": string,
+  "fName": string,
+  "lName": string,
+  "role": string,
+  "province": string,
+  "profileImg": string,
+  "isActivate": boolean,
+  "level_ID": number
 }
