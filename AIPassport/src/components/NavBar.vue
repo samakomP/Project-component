@@ -32,18 +32,19 @@ const handleLogout = () => {
           </svg>
         </button>
 
-        <div class="flex items-center gap-3">
+
+          <RouterLink to="/UserProfile" class="flex items-center gap-3">
           <span class="font-serif font-medium text-lg text-gray-900">
             {{ authStore.user?.username || 'Guest' }}
           </span>
-          <div class="w-10 h-10 rounded-full border-2 border-gray-900 flex items-center justify-center">
-            <svg class="w-6 h-6 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-            </svg>
-          </div>
-        </div>
+            <div class="w-10 h-10 rounded-full border-2 border-gray-900 flex items-center justify-center">
+              <svg class="w-6 h-6 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+              </svg>
+            </div>
+          </RouterLink>
 
-      </div>
+        </div>
 
 
 
