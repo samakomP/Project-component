@@ -1,14 +1,37 @@
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia'
 
 
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
+const route = useRoute()
+const router = useRouter()
+
+const showFlash = ref(false)
+
+onMounted(() => {
+  if (route.query.updated === 'true') {
+    showFlash.value = true
+    router.replace({ query: {} })
+    setTimeout(() => {
+      showFlash.value = false
+    }, 3000)
+  }
+})
 </script>
 
 <template>
   <div v-if="user" class="space-y-8">
+    <div
+      v-if="showFlash"
+      class="bg-green-100 border-2 border-green-400 text-green-700 px-4 py-3 rounded-xl text-center font-bold text-xl transition-all shadow-sm"
+    >
+      Profile updated successfully!
+    </div>
+
     <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8 text-lg font-serif">
       <p><span class="text-gray-700">First name :</span> <span class="font-bold text-gray-900">{{ user.fName }}</span></p>
       <p><span class="text-gray-700">Last name :</span> <span class="font-bold text-gray-900">{{ user.lName }}</span></p>

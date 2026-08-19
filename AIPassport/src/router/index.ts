@@ -8,7 +8,7 @@ import HomeView from '@/views/user/MainUser.vue'
 import UserProfile from '@/views/user/UserProfile.vue'
 import UserBadge from '@/views/user/UserBadge.vue'
 import UserDetail from '@/views/user/UserDetail.vue'
-import UserDetailEdit from '@/views/user/UserDetail.vue'
+import UserDetailEdit from '@/views/user/UserDetailEdit.vue'
 import UserHistExam from '@/views/user/HistoryExam.vue'
 import UserService from '@/views/user/UserServices.vue'
 
