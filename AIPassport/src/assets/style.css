@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+@theme {
+    --shadow-sp: 0 3px 12px 0 rgba(0, 0, 0, 0.2);
+    --font-sans: Avenir, Helvetica, Arial, san-serif;
+}
+
+h1{
+    @apply text-5xl font-bold text-gray-900 mb-3 font-serif;
+}
+
+.box{
+    @apply w-full max-w-115 bg-purple-400/10  border border-purple-400/20  rounded-3xl p-8 sm:p-10 shadow-2xl;
+}
+
+.btn{
+    @apply cursor-pointer w-full bg-[#55F7A9] hover:bg-[#55F7A9]/40 
+    text-white font-bold font-serif hover:text-mist-800 
+    py-3.5 px-4 rounded-xl transition-colors duration-200 mt-2 
+    hover:scale-98 ;
+
+
+}
