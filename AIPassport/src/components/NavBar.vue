@@ -47,7 +47,7 @@ const handleLogout = () => {
 
 
 
-      <div class="w-full max-w-6xl mx-auto h-0.5 bg-purple-300 mt-7"></div>
+      <div class="w-full max-w-6xl mx-auto h-2 bg-purple-300 mt-7 rounded-[40px]"></div>
     </header>
 
     <div v-if="isSidebarOpen" class="fixed inset-0 z-50 flex">
