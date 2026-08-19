@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia'
+import EditForm from '@/components/EditForm.vue'
 
 
 const userStore = useUserStore()
@@ -11,6 +12,7 @@ const route = useRoute()
 const router = useRouter()
 
 const showFlash = ref(false)
+const showEditForm = ref(false)
 
 onMounted(() => {
   if (route.query.updated === 'true') {
@@ -32,21 +34,35 @@ onMounted(() => {
       Profile updated successfully!
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8 text-lg font-serif">
-      <p><span class="text-gray-700">First name :</span> <span class="font-bold text-gray-900">{{ user.fName }}</span></p>
-      <p><span class="text-gray-700">Last name :</span> <span class="font-bold text-gray-900">{{ user.lName }}</span></p>
-      <p><span class="text-gray-700">Email :</span> <span class="font-bold text-gray-900">{{ user.username }}@gmail.com</span></p>
-      <p><span class="text-gray-700">Province :</span> <span class="font-bold text-gray-900">{{ user.province }}</span></p>
-    </div>
+    <template v-if="!showEditForm">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8 text-lg font-serif">
+        <p><span class="text-gray-700">First name :</span> <span class="font-bold text-gray-900">{{ user.fName }}</span></p>
+        <p><span class="text-gray-700">Last name :</span> <span class="font-bold text-gray-900">{{ user.lName }}</span></p>
+        <p><span class="text-gray-700">Email :</span> <span class="font-bold text-gray-900">{{ user.username }}@gmail.com</span></p>
+        <p><span class="text-gray-700">Province :</span> <span class="font-bold text-gray-900">{{ user.province }}</span></p>
+      </div>
 
-    <div class="flex justify-center">
-      <router-link 
-        :to="{ name: 'user-detailEdit-view', params: { id: user.users_ID } }" 
-        class="bg-[#FCC084] text-[#003366] font-bold text-2xl px-16 py-3 rounded-[40px] hover:opacity-80 transition inline-block"
-      >
-        Edit
-      </router-link>
-    </div>
+      <div class="flex justify-center">
+        <button
+          @click="showEditForm = true"
+          class="bg-[#FCC084] text-[#003366] font-bold text-2xl px-16 py-3 rounded-[40px] hover:opacity-80 transition inline-block"
+        >
+          Edit
+        </button>
+      </div>
+    </template>
+
+    <EditForm
+      v-else
+      :initial-data="{
+        fName: user.fName || '',
+        lName: user.lName || '',
+        email: user.username ? `${user.username}@gmail.com` : '',
+        province: user.province || ''
+      }"
+      @save="showEditForm = false"
+      @cancel="showEditForm = false"
+    />
   </div>
 </template>
 
