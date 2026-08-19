@@ -41,10 +41,7 @@ export const useExamStore = defineStore('exam', () => {
 
     const passCriteria = getPassCriteria(level)
 
-    result.value =
-      score.value >= passCriteria
-        ? 'PASS'
-        : 'FAIL'
+    result.value = score.value! >= passCriteria ? 'PASS' : 'FAIL'
 
     const record: ExamHistory = {
       id: Date.now(),
