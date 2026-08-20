@@ -36,3 +36,8 @@ export function deactivateUser(id: number) {
   const raw = users.find(u => u.users_ID === id)
   if (raw) raw.isActivate = false
 }
+
+export function activateUser(id: number) {
+  const raw = users.find(u => u.users_ID === id)
+  if (raw) raw.isActivate = true
+}

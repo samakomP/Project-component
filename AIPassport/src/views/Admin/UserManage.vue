@@ -24,6 +24,10 @@ const goBack = () => {
     router.push({ name: 'admin-home-view', params: { id: route.params.id } })
 }
 
+const goToUserProfile = (userId: number) => {
+  router.push({ name: 'admin-user-detail', params: { id: route.params.id, userId } })
+}
+
 const page = computed(() => {
   return Number(route.query.page) || 1
 })
@@ -159,10 +163,11 @@ const mockUserService = async (
             </div>
 
             <div class="flex flex-col gap-4">
-              <div 
-                v-for="user in users" 
+              <div
+                v-for="user in users"
                 :key="user.id"
-                class="bg-[#dcdcdc] rounded-[30px] p-4 px-8 grid grid-cols-[1.5fr_2fr_1fr_1fr_1fr] gap-4 items-center"
+                @click="goToUserProfile(user.id)"
+                class="bg-[#dcdcdc] rounded-[30px] p-4 px-8 grid grid-cols-[1.5fr_2fr_1fr_1fr_1fr] gap-4 items-center cursor-pointer hover:bg-[#d0d0d0] transition"
               >
                 
                 <div class="flex items-center gap-4">

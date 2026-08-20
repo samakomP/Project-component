@@ -6,7 +6,7 @@ import UserProfileLayout from '@/components/UserProfileCard.vue'
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
 
-// The 4 sub-routes for the standard user
+
 const profileLinks = [
   { label: 'Detail', name: 'userdetail-view' },
   { label: 'Services', name: 'user-service-view' },

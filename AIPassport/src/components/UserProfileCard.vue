@@ -59,10 +59,10 @@ defineProps({
 
       <div class="w-full mt-2">
         <nav class="flex justify-center items-center gap-8 md:gap-16 pb-3 border-b-[5px] border-[#5BF09F] w-full md:w-[85%] mx-auto">
-          <router-link 
-            v-for="link in links" 
+          <router-link
+            v-for="link in links"
             :key="link.name"
-            :to="{ name: link.name, params: { id: user?.id } }"
+            :to="{ name: link.name, params: route.params }"
             class="text-[26px] md:text-3xl font-bold transition-colors whitespace-nowrap"
             :class="route.name === link.name ? 'text-[#a3a3a3]' : 'text-black hover:text-gray-600'"
           >

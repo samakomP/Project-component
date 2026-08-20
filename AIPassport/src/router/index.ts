@@ -16,6 +16,10 @@ import ExamView from '@/views/user/ExamView.vue'
 import ResultView from '@/views/user/ResultView.vue'
 import AdminHomePage from '@/views/Admin/HomePage.vue'
 import UserManage from '@/views/Admin/UserManage.vue'
+import AdminUserProfile from '@/views/Admin/AdminUserProfile.vue'
+import AdminUserDetail from '@/views/Admin/events/AdminUserDetail.vue'
+import AdminUserHistory from '@/views/Admin/events/AdminUserHistory.vue'
+import AdminEditview from '@/views/Admin/events/AdminEditview.vue'
 
 import CardBase from '@/components/CardBase.vue'
 import { useUserStore } from '@/stores/user'
@@ -65,6 +69,37 @@ const router = createRouter({
         userStore.setUser(Number(to.params.id))
       },
       meta: { requiresAdmin: true }
+    },
+    {
+      path: '/admin/:id/users/:userId',
+      name: 'admin-user-profile',
+      component: AdminUserProfile,
+      beforeEnter: (to) => {
+        const userStore = useUserStore()
+        userStore.setUser(Number(to.params.id))
+      },
+      meta: { requiresAdmin: true },
+      children: [
+        {
+          path: '',
+          redirect: (to) => ({ name: 'admin-user-detail', params: to.params })
+        },
+        {
+          path: 'detail',
+          name: 'admin-user-detail',
+          component: AdminUserDetail
+        },
+        {
+          path: 'history',
+          name: 'admin-user-history',
+          component: AdminUserHistory
+        },
+        {
+          path: 'edit',
+          name: 'admin-detailEdit-view',
+          component: AdminEditview
+        },
+      ]
     },
     {
       path: '/exam/:id/:level?',

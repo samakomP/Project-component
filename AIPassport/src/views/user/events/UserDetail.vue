@@ -4,7 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia'
 import { useMessageStore } from '@/stores/message'
-
+import Detail from '@/components/Detail.vue'
 
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
@@ -40,15 +40,13 @@ const goToEdit = () => {
 
 <template>
   <div v-if="user" class="space-y-8 relative">
-      <div id="flashMessage" v-if= "messageEdit"
-        class="absolute top-3 left-1/2 -translate-x-1/2 w-fit z-50 shadow-md rounded-3xl px-6 py-3 bg-pink-200">
-        <h4 class="font-bold text-gray-800">{{ messageEdit }}</h4>
-      </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-y-13 gap-x-8 text-lg pt-20 font-serif">
-      <p><span class="text-gray-700">First name :</span> <span class="font-bold text-gray-900">{{ user.name }}</span></p>
-      <p><span class="text-gray-700">Last name :</span> <span class="font-bold text-gray-900">{{ user.surname }}</span></p>
-      <p><span class="text-gray-700">Email :</span> <span class="font-bold text-gray-900">{{ user.username }}@gmail.com</span></p>
-      <p><span class="text-gray-700">Province :</span> <span class="font-bold text-gray-900">{{ user.province }}</span></p>
+    <div id="flashMessage" v-if="messageEdit"
+      class="absolute top-3 left-1/2 -translate-x-1/2 w-fit z-50 shadow-md rounded-3xl px-6 py-3 bg-pink-200">
+      <h4 class="font-bold text-gray-800">{{ messageEdit }}</h4>
+    </div>
+
+    <div class="pt-20 font-serif">
+      <Detail :user-id="user.id" />
     </div>
 
     <div class="flex justify-center">
@@ -61,16 +59,3 @@ const goToEdit = () => {
     </div>
   </div>
 </template>
-
-<style scoped>
-.profile {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.profile p {
-  margin: 8px 0;
-  width: 100%;
-}
-</style>
