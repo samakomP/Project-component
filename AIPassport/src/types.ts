@@ -5,7 +5,7 @@ export interface Auth {
 
 export interface MessageState {
   message: string
-  editMessage: string
+  messageEdit: string
 }
 
 export interface EventState {

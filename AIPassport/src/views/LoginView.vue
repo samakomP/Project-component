@@ -17,10 +17,11 @@ const authData = ref<Auth>({
 
 const handleLogin = async () => {
   const role = await authStore.login(authData.value.username)
-  if (role === 'admin') {
-    router.push('/admin')
-  } else if (role === 'user') {
-    router.push('/home')
+  if (role) {
+    router.push({
+      name: 'userhome-view',
+      params: { id:authStore.user?.users_ID}
+    })
   } else {
     store.updateMessage(`The Username ${authData.value.username} does not exist!`)
     setTimeout(() => {

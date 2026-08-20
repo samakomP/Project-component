@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 export const useMessageStore = defineStore('message', {
   state: (): MessageState => ({
     message: '',
-    editMessage: '',
+    messageEdit: '',
   }),
   actions: {
     updateMessage(message: string): void {
@@ -11,6 +11,12 @@ export const useMessageStore = defineStore('message', {
     },
     resetMessage(): void {
       this.message = ''
+    },
+    updateMessageEdit(message: string): void {
+      this.messageEdit = message
+    },
+    resetMessageEdit(): void {
+      this.messageEdit = ''
     },
   },
 })

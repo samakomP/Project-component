@@ -2,7 +2,11 @@
 import { ref } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/Auth'
+import { useUserStore } from '@/stores/user'
+import { storeToRefs } from 'pinia'
 
+const userStore = useUserStore()
+const { user } = storeToRefs(userStore)
 const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
@@ -24,7 +28,7 @@ const handleLogout = () => {
 
 <template>
     <header v-if="route.path !== '/login' && route.path !== '/register'" class="bg-white px-6 pt-6 pb-4">
-      <div class="flex justify-between items-center max-w-8xl mx-auto">
+      <div v-if="user" class="flex justify-between items-center max-w-8xl mx-auto">
         
         <button @click="toggleSidebar" class="focus:outline-none hover:opacity-70 transition">
           <svg class="w-10 h-10 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -33,9 +37,9 @@ const handleLogout = () => {
         </button>
 
 
-          <RouterLink to="/UserProfile" class="flex items-center gap-3">
+          <RouterLink :to="{ name: 'userdetail-view', params: { id: authStore.user?.users_ID } }" class="flex items-center gap-3">
           <span class="font-serif font-medium text-lg text-gray-900">
-            {{ authStore.user?.username || 'Guest' }}
+            {{ user.username|| 'Guest' }}
           </span>
             <div class="w-10 h-10 rounded-full border-2 border-gray-900 flex items-center justify-center">
               <svg class="w-6 h-6 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -62,7 +66,7 @@ const handleLogout = () => {
         </button>
 
         <nav class="flex flex-col gap-8 grow text-center text-4xl font-serif font-medium">
-          <RouterLink to="/home" @click="toggleSidebar" class=" text-black hover:text-gray-600 transition" exact-active-class="text-green-500 underline underline-offset-4 decoration-2">Home</RouterLink>
+          <RouterLink :to="{ name: 'userhome-view', params: { id: authStore.user?.users_ID } }" @click="toggleSidebar" class=" text-black hover:text-gray-600 transition" exact-active-class="text-green-500 underline underline-offset-4 decoration-2">Home</RouterLink>
           <RouterLink to="/e-learning" @click="toggleSidebar" class=" text-black hover:text-gray-600 transition" exact-active-class="text-green-500 underline underline-offset-4 decoration-2">E-Learning</RouterLink>
           <RouterLink to="/benefits" @click="toggleSidebar" class=" text-black hover:text-gray-600 transition" exact-active-class="text-green-500 underline underline-offset-4 decoration-2">Benefits</RouterLink>
           <RouterLink to="/exam" @click="toggleSidebar" class="text-black hover:text-gray-600 transition" exact-active-class="text-green-500 underline underline-offset-4 decoration-2">Exam</RouterLink>
