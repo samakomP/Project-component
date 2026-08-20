@@ -9,6 +9,7 @@ import UserDetail from '@/views/user/UserDetail.vue'
 import UserDetailEdit from '@/views/user/UserDetailEdit.vue'
 import UserHistExam from '@/views/user/HistoryExam.vue'
 import UserService from '@/views/user/UserServices.vue'
+import PrepExam from '@/views/user/PrepExam.vue'
 
 import CardBase from '@/components/CardBase.vue'
 import { useUserStore } from '@/stores/user'
@@ -34,6 +35,15 @@ const router = createRouter({
       path: '/home/:id',
       name: 'userhome-view',
       component: HomeView,
+      beforeEnter: (to) => {
+        const userStore = useUserStore()
+        userStore.setUser(Number(to.params.id))
+      }
+    },
+    {
+      path: '/exam/:id/:level?',
+      name: 'exam-view',
+      component: PrepExam,
       beforeEnter: (to) => {
         const userStore = useUserStore()
         userStore.setUser(Number(to.params.id))
