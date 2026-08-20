@@ -4,6 +4,8 @@ import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import CardBase from '@/components/CardBase.vue'
 import PillLevel from '@/components/PillLevel.vue'
+import StatTile from '@/components/StatTile.vue'
+import AttemptField from '@/components/AttemptField.vue'
 import { useUserStore } from '@/stores/user'
 import { getExamLevel, getQuestionsByLevel, getExamHistoryByUser } from '@/services/ExamService'
 import { getPassCriteria } from '@/services/LevelService'
@@ -83,10 +85,7 @@ function formatDate(dateTime: string) {
           <h1 class="text-5xl font-bold text-center mb-2 tracking-wide">EXAM HUB</h1>
 
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <CardBase class="!bg-[#dcdcdc] !rounded-[40px] !shadow-none p-6 flex flex-col items-center justify-center aspect-square text-center">
-              <span class="text-xl font-bold mb-3">Total<br>Question</span>
-              <span class="text-4xl font-bold">{{ totalQuestions }}</span>
-            </CardBase>
+            <StatTile :value="totalQuestions">Total<br>Question</StatTile>
 
             <CardBase class="!bg-[#dcdcdc] !rounded-[40px] !shadow-none p-6 flex items-center justify-center aspect-square gap-2">
               <span class="text-6xl font-bold">NO</span>
@@ -96,28 +95,16 @@ function formatDate(dateTime: string) {
               </div>
             </CardBase>
 
-            <CardBase class="!bg-[#dcdcdc] !rounded-[40px] !shadow-none p-6 flex flex-col items-center justify-center aspect-square text-center">
-              <span class="text-xl font-bold mb-3">Pass score</span>
-              <span class="text-4xl font-bold">{{ passScore }}%</span>
-            </CardBase>
+            <StatTile :value="`${passScore}%`">Pass score</StatTile>
           </div>
 
           <CardBase class="!bg-[#dcdcdc] !rounded-[40px] !shadow-none p-6 flex flex-col gap-4 mt-2 min-h-[140px] justify-center">
             <h3 class="text-2xl font-bold text-center">Last attempt</h3>
 
             <div v-if="lastAttempt" class="flex justify-between items-center text-center px-2 md:px-8 mt-2">
-              <div class="flex flex-col gap-1">
-                <span class="text-base font-bold">Status</span>
-                <span class="text-2xl font-bold">{{ lastAttempt.status }}</span>
-              </div>
-              <div class="flex flex-col gap-1">
-                <span class="text-base font-bold">Score</span>
-                <span class="text-2xl font-bold">{{ lastAttempt.score }} %</span>
-              </div>
-              <div class="flex flex-col gap-1">
-                <span class="text-base font-bold">Date</span>
-                <span class="text-2xl font-bold">{{ lastAttempt.date }}</span>
-              </div>
+              <AttemptField label="Status" :value="lastAttempt.status" />
+              <AttemptField label="Score" :value="`${lastAttempt.score} %`" />
+              <AttemptField label="Date" :value="lastAttempt.date" />
             </div>
 
             <div v-else class="text-center text-gray-500 font-bold text-lg mt-2">

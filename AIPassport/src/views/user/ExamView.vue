@@ -4,6 +4,8 @@ import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import CardBase from '@/components/CardBase.vue'
 import PillLevel from '@/components/PillLevel.vue'
+import AnswerOption from '@/components/AnswerOption.vue'
+import QuestionNavButton from '@/components/QuestionNavButton.vue'
 import { useUserStore } from '@/stores/user'
 import { useExamStore } from '@/stores/Exam'
 import { getExamLevel } from '@/services/ExamService'
@@ -147,18 +149,14 @@ function quitExam() {
             <h1 class="text-3xl font-bold font-sans mb-8 text-center">{{ currentQuestion.text }}</h1>
 
             <div class="w-full max-w-md flex flex-col gap-3">
-              <div
+              <AnswerOption
                 v-for="option in currentQuestion.options"
                 :key="option.letter"
-                @click="selectOption(option.letter)"
-                :class="[
-                  'w-full px-5 py-3 rounded-lg flex items-center gap-3 cursor-pointer transition-colors duration-200 font-sans text-sm font-bold',
-                  currentQuestion.selected === option.letter ? 'bg-[#8faadc] text-black' : 'bg-[#dcdcdc] text-black hover:bg-[#d0d0d0]'
-                ]"
-              >
-                <span>{{ option.letter }}.</span>
-                <span>{{ option.text }}</span>
-              </div>
+                :letter="option.letter"
+                :text="option.text"
+                :selected="currentQuestion.selected === option.letter"
+                @select="selectOption(option.letter)"
+              />
             </div>
           </CardBase>
 
@@ -190,17 +188,13 @@ function quitExam() {
         <CardBase class="!bg-[#e6e6e6] !rounded-[40px] !shadow-none p-6 md:p-8 flex flex-col items-center w-full md:w-56 shrink-0 h-fit">
           <h2 class="text-2xl font-bold mb-6">Question</h2>
           <div class="flex flex-col w-full gap-4">
-            <button
+            <QuestionNavButton
               v-for="(q, index) in questions"
               :key="q.id"
+              :label="`Q${index + 1}`"
+              :active="currentQuestionIndex === index"
               @click="goToQuestion(index)"
-              :class="[
-                'w-full py-2 rounded-xl font-bold text-xl transition-colors duration-200',
-                currentQuestionIndex === index ? 'bg-[#fbc58b] text-black' : 'bg-[#b3b3b3] text-black hover:bg-[#a0a0a0]'
-              ]"
-            >
-              Q{{ index + 1 }}
-            </button>
+            />
           </div>
         </CardBase>
 
