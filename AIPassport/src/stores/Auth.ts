@@ -4,7 +4,7 @@ import { defineStore } from 'pinia'
 
 export const useAuthStore = defineStore('auth', () => {
   const storedUser = localStorage.getItem('auth_user')
-const user = ref<{ username: string; role: string } | null>(storedUser ? JSON.parse(storedUser) : null)
+  const user = ref<{ username: string; role: string } | null>(storedUser ? JSON.parse(storedUser) : null)
   const login = async (username: string) => {
     
     if (username === 'Admin1') {
