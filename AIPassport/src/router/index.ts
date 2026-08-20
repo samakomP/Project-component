@@ -15,6 +15,10 @@ import PrepExam from '@/views/user/PrepExam.vue'
 import ExamView from '@/views/user/ExamView.vue'
 import ResultView from '@/views/user/ResultView.vue'
 import AdminHomePage from '@/views/Admin/HomePage.vue'
+import AdminLevel from '@/views/Admin/AdminLevel.vue'
+import LevelDetail from '@/views/Admin/LevelDetail.vue'
+import EditLevel from '@/views/Admin/events/EditLevel.vue'
+import ExamDetail from '@/views/Admin/ExamDetail.vue'
 import UserManage from '@/views/Admin/UserManage.vue'
 import AdminUserProfile from '@/views/Admin/AdminUserProfile.vue'
 import AdminUserDetail from '@/views/Admin/events/AdminUserDetail.vue'
@@ -59,47 +63,6 @@ const router = createRouter({
         userStore.setUser(Number(to.params.id))
       },
       meta: { requiresAdmin: true }
-    },
-    {
-      path: '/admin/:id/users',
-      name: 'admin-management',
-      component: UserManage,
-      beforeEnter: (to) => {
-        const userStore = useUserStore()
-        userStore.setUser(Number(to.params.id))
-      },
-      meta: { requiresAdmin: true }
-    },
-    {
-      path: '/admin/:id/users/:userId',
-      name: 'admin-user-profile',
-      component: AdminUserProfile,
-      beforeEnter: (to) => {
-        const userStore = useUserStore()
-        userStore.setUser(Number(to.params.id))
-      },
-      meta: { requiresAdmin: true },
-      children: [
-        {
-          path: '',
-          redirect: (to) => ({ name: 'admin-user-detail', params: to.params })
-        },
-        {
-          path: 'detail',
-          name: 'admin-user-detail',
-          component: AdminUserDetail
-        },
-        {
-          path: 'history',
-          name: 'admin-user-history',
-          component: AdminUserHistory
-        },
-        {
-          path: 'edit',
-          name: 'admin-detailEdit-view',
-          component: AdminEditview
-        },
-      ]
     },
     {
       path: '/exam/:id/:level?',
