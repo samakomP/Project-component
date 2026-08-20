@@ -1,6 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import UserServices from '@/services/UserServices'
-
 
 import LoginView from '@/views/LoginView.vue'
 import RegisterView from '@/views/RegisterView.vue'
@@ -12,13 +10,8 @@ import UserDetailEdit from '@/views/user/UserDetailEdit.vue'
 import UserHistExam from '@/views/user/HistoryExam.vue'
 import UserService from '@/views/user/UserServices.vue'
 
-
-import LearningView from '@/views/LoginView.vue'
 import CardBase from '@/components/CardBase.vue'
 import { useUserStore } from '@/stores/user'
-import type { User } from '@/types'
-
-
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -42,11 +35,8 @@ const router = createRouter({
       name: 'userhome-view',
       component: HomeView,
       beforeEnter: (to) => {
-        const id = to.params.id as string
         const userStore = useUserStore()
-        return UserServices.getUser(id).then(response => {
-          if (response.data && response.data.length > 0) userStore.setUser(response.data[0])
-        })
+        userStore.setUser(Number(to.params.id))
       }
     },
     {
@@ -55,25 +45,8 @@ const router = createRouter({
       component: UserProfile,
       props: true,
       beforeEnter: (to) => {
-        const id = to.params.id as string
         const userStore = useUserStore()
-        return UserServices.getUser(id)
-          .then((response) => {
-            if (response.data && Object.keys(response.data).length === 0) {
-              console.log(response.data)
-              return { name: '404-resource', params: { resource: 'user' } }
-            } else {
-              userStore.setUser(response.data[0])
-            }
-          })
-          .catch((error) => {
-            console.error('Error fetching user', error)
-            if (error.response && error.response.status === 404) {
-              return { name: '404-resource', params: { resource: 'user' } }
-            } else {
-              return { name: 'network-error' }
-            }
-          })
+        userStore.setUser(Number(to.params.id))
       },
       children: [
         {

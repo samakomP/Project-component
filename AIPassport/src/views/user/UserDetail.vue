@@ -34,7 +34,7 @@ onUnmounted(() => {
 })
 
 const goToEdit = () => {
-  router.push({ name: 'user-detailEdit-view', params: { id: user.value?.users_ID } })
+  router.push({ name: 'user-detailEdit-view', params: { id: user.value?.id } })
 }
 </script>
 
@@ -45,8 +45,8 @@ const goToEdit = () => {
         <h4 class="font-bold text-gray-800">{{ messageEdit }}</h4>
       </div>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-y-13 gap-x-8 text-lg pt-20 font-serif">
-      <p><span class="text-gray-700">First name :</span> <span class="font-bold text-gray-900">{{ user.fName }}</span></p>
-      <p><span class="text-gray-700">Last name :</span> <span class="font-bold text-gray-900">{{ user.lName }}</span></p>
+      <p><span class="text-gray-700">First name :</span> <span class="font-bold text-gray-900">{{ user.name }}</span></p>
+      <p><span class="text-gray-700">Last name :</span> <span class="font-bold text-gray-900">{{ user.surname }}</span></p>
       <p><span class="text-gray-700">Email :</span> <span class="font-bold text-gray-900">{{ user.username }}@gmail.com</span></p>
       <p><span class="text-gray-700">Province :</span> <span class="font-bold text-gray-900">{{ user.province }}</span></p>
     </div>

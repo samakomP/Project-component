@@ -47,7 +47,7 @@ export const useExamStore = defineStore('exam', () => {
       id: Date.now(),
       userId,
       level,
-      score: score.value,
+      score: score.value!,
       result: result.value,
       dateTime: new Date().toISOString(),
     }

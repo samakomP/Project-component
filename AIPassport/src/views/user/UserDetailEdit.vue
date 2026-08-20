@@ -14,8 +14,8 @@ const router = useRouter()
 const store = useMessageStore()
 
 const initialFormData = ref({
-  fName: '',
-  lName: '',
+  name: '',
+  surname: '',
   email: '',
   province: ''
 })
@@ -25,8 +25,8 @@ const isDataReady = ref(false)
 onMounted(() => {
   if (user.value) {
     initialFormData.value = {
-      fName: user.value.fName || '',
-      lName: user.value.lName || '',
+      name: user.value.name || '',
+      surname: user.value.surname || '',
       email: user.value.username ? `${user.value.username}@gmail.com` : '',
       province: user.value.province || ''
     }
@@ -42,13 +42,13 @@ const handleSave = () => {
 
   router.push({
     name: 'userdetail-view',
-    params: { id: user.value?.users_ID },
+    params: { id: user.value?.id },
     query: { updated: 'true' },
   })
 }
 
 const handleCancel = () => {
-  router.push({ name: 'userdetail-view', params: { id: user.value?.users_ID } })
+  router.push({ name: 'userdetail-view', params: { id: user.value?.id } })
 }
 </script>
 

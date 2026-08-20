@@ -4,8 +4,8 @@ import { ref } from 'vue'
 
 const props = defineProps<{
   initialData: {
-    fName: string
-    lName: string
+    name: string
+    surname: string
     email: string
     province: string
   }
@@ -36,17 +36,17 @@ const onCancel = () => {
     
     <div>
       <label class="block text-2xl font-bold text-black mb-2">First name</label>
-      <input 
-        v-model="formData.fName" 
-        type="text" 
-        class="w-full h-12 bg-[#d9d9d9] text-gray-900 px-4 text-lg focus:outline-none focus:ring-2 focus:ring-[#5BF09F]" 
+      <input
+        v-model="formData.name"
+        type="text"
+        class="w-full h-12 bg-[#d9d9d9] text-gray-900 px-4 text-lg focus:outline-none focus:ring-2 focus:ring-[#5BF09F]"
       />
     </div>
-    
+
     <div>
       <label class="block text-2xl font-bold text-black mb-2">Last name</label>
-      <input 
-        v-model="formData.lName" 
+      <input
+        v-model="formData.surname"
         type="text" 
         class="w-full h-12 bg-[#d9d9d9] text-gray-900 px-4 text-lg focus:outline-none focus:ring-2 focus:ring-[#5BF09F]" 
       />

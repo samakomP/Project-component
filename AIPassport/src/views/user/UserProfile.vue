@@ -27,7 +27,7 @@ const { user } = storeToRefs(userStore)
             
             <div>
               <h1 class="font-serif font-bold text-3xl md:text-4xl text-gray-900">
-                {{ user.fName }} {{ user.lName }}
+                {{ user.name }} {{ user.surname }}
               </h1>
               <p class="font-serif text-gray-400 text-lg mt-1">
                 Join Date : 05-1-2025
@@ -36,33 +36,33 @@ const { user } = storeToRefs(userStore)
           </div>
 
             <PillLevel class="absolute top-5 right-6 text-2xl">
-                Level {{ user.level_ID }}
+                Level {{ user.level }}
             </PillLevel>
 
         </div>
 
-        
+
         <div class="border-b-2 border-emerald-300 pb-3 mb-8 w-full">
           <nav class="flex justify-center gap-9 md:gap-18 font-serif text-lg md:text-xl font-bold" >
-            <router-link :to="{ name: 'userdetail-view', params: { id: user?.users_ID } }"
-              class="text-gray-900 transition delay-150 duration-300 ease-in-out" 
+            <router-link :to="{ name: 'userdetail-view', params: { id: user?.id } }"
+              class="text-gray-900 transition delay-150 duration-300 ease-in-out"
               exact-active-class="!text-gray-400 border-x-2 border-gray-400 border-x-5 px-3">Detail</router-link>
 
-            <router-link :to="{ name: 'user-service-view', params: { id: user?.users_ID } }"
+            <router-link :to="{ name: 'user-service-view', params: { id: user?.id } }"
               class="text-gray-900 transition delay-150 duration-300 ease-in-out"
               exact-active-class="!text-gray-400 border-x-2 border-gray-400 border-x-5 px-3">Services</router-link>
-            
-            <router-link :to="{ name: 'user-badge-view', params: { id: user?.users_ID } }"
+
+            <router-link :to="{ name: 'user-badge-view', params: { id: user?.id } }"
               class="text-gray-900 transition delay-150 duration-300 ease-in-out"
               exact-active-class="!text-gray-400 border-x-2 border-gray-400 border-x-5 px-3">Badges</router-link>
-            
-            <router-link :to="{ name: 'user-history-view', params: { id: user?.users_ID } }"
-              class="text-gray-900  transition delay-150 duration-300 ease-in-out" 
+
+            <router-link :to="{ name: 'user-history-view', params: { id: user?.id } }"
+              class="text-gray-900  transition delay-150 duration-300 ease-in-out"
               exact-active-class="!text-gray-400 border-x-2 border-gray-400 border-x-5 px-3">History Exam</router-link>
           </nav>
         </div>
 
-        <RouterView :uesr="user"/>
+        <RouterView :user="user"/>
       </CardBase>
     </div>
   </div>

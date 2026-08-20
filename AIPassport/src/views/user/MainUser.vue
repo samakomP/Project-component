@@ -47,15 +47,15 @@ const { user } = storeToRefs(userStore)
     <RouterLink to="/benefits" class="block h-full">
       <CardBase class="p-18 text-center items-center justify-center hover:scale-106 transition">
         <p class="text-gray-500 font-medium mb-2">You're current level at</p>
-        <h2 class="text-5xl font-black text-gray-900 mb-8">{{ user.level_ID}}</h2>
+        <h2 class="text-5xl font-black text-gray-900 mb-8">{{ user.level}}</h2>
         <div class="flex flex-col gap-4 w-full max-w-[200px] mx-auto">
-          <div :class="user.level_ID >= 1 ? 'bg-green-400' : 'bg-gray-300'" 
+          <div :class="user.level >= 1 ? 'bg-green-400' : 'bg-gray-300'" 
             class="text-white font-bold text-xl py-2 rounded-full w-full">Level 1</div>
-          <div :class="user.level_ID >= 2 ? 'bg-green-400' : 'bg-gray-300'" 
+          <div :class="user.level >= 2 ? 'bg-green-400' : 'bg-gray-300'" 
             class="text-white font-bold text-xl py-2 rounded-full w-full">Level 2</div>
-          <div :class="user.level_ID >= 3 ? 'bg-green-400' : 'bg-gray-300'"
+          <div :class="user.level >= 3 ? 'bg-green-400' : 'bg-gray-300'"
             class="text-white font-bold text-xl py-2 rounded-full w-full">Level 3</div>
-          <div :class="user.level_ID >= 4 ? 'bg-green-400' : 'bg-gray-300'"
+          <div :class="user.level >= 4 ? 'bg-green-400' : 'bg-gray-300'"
             class="text-white font-bold text-xl py-2 rounded-full w-full">Level 4</div>
         </div>
       </CardBase>

@@ -20,7 +20,7 @@ const handleLogin = async () => {
   if (role) {
     router.push({
       name: 'userhome-view',
-      params: { id:authStore.user?.users_ID}
+      params: { id:authStore.user?.id}
     })
   } else {
     store.updateMessage(`The Username ${authData.value.username} does not exist!`)

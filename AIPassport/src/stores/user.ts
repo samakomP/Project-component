@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 import type { User } from '@/types'
@@ -12,18 +12,18 @@ import {
 export const useUserStore = defineStore('user', () => {
   const users = ref<User[]>(getUsers())
 
-  const currentUser = ref<User | null>(null)
+  const user = ref<User | null>(null)
 
-  function setCurrentUser(userId: number) {
-    currentUser.value = getUserById(userId) ?? null
+  function setUser(userId: number) {
+    user.value = getUserById(userId) ?? null
   }
 
   function updateUserData(id: number, data: Partial<User>) {
     updateUser(id, data)
     users.value = getUsers()
 
-    if (currentUser.value?.id === id) {
-      currentUser.value = getUserById(id) ?? null
+    if (user.value?.id === id) {
+      user.value = getUserById(id) ?? null
     }
   }
 
@@ -34,8 +34,8 @@ export const useUserStore = defineStore('user', () => {
 
   return {
     users,
-    currentUser,
-    setCurrentUser,
+    user,
+    setUser,
     updateUserData,
     deactivateUserById,
   }

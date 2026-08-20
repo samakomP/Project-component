@@ -1,36 +1,47 @@
 import { levels } from '@/mock/levels'
-import { benefits } from '@/mock/benefits'
-import { services } from '@/mock/services'
+import { Benefits } from '@/mock/Benefits'
+import { Services } from '@/mock/Services'
+import type { Level, Benefit, Service } from '@/types'
 
-export function getLevels() {
-  return levels
-}
-
-export function getLevelByNumber(levelNumber: number) {
-
-  for (let i = 0; i < levels.length; i++) {
-    if (levels[i].levelNumber === levelNumber) {
-        return levels[i];
-    }
+function toLevel(raw: (typeof levels)[number]): Level {
+  return {
+    id: raw.level_ID,
+    levelNumber: raw.levelNumber,
+    name: `Level ${raw.levelNumber}`,
+    passCriteria: raw.passCriteria,
   }
-  return undefined;
 }
 
-export function getBenefitsByLevel(levelNumber: number) {
-    const result = [];
-    
-    for (let i = 0; i < benefits.length; i++) {
-        if (benefits[i].level === levelNumber) {
-            result.push(benefits[i]);
-    }
-  }
-  return result;
+export function getLevels(): Level[] {
+  return levels.map(toLevel)
 }
 
-export function getServicesByLevel(levelNumber: number) {
-  return services.filter(service => service.level === levelNumber)
+export function getLevelByNumber(levelNumber: number): Level | undefined {
+  return getLevels().find(level => level.levelNumber === levelNumber)
 }
 
-export function getPassCriteria(levelNumber: number) {
+export function getBenefitsByLevel(levelNumber: number): Benefit[] {
+  return Benefits
+    .filter(benefit => benefit.level_ID === levelNumber)
+    .map(benefit => ({
+      id: benefit.benefits_ID,
+      level: benefit.level_ID,
+      name: benefit.benefitName,
+      description: benefit.description,
+    }))
+}
+
+export function getServicesByLevel(levelNumber: number): Service[] {
+  return Services
+    .filter(service => service.level_ID === levelNumber)
+    .map(service => ({
+      id: service.service_ID,
+      level: service.level_ID,
+      name: service.serviceName,
+      description: service.description,
+    }))
+}
+
+export function getPassCriteria(levelNumber: number): number {
   return getLevelByNumber(levelNumber)?.passCriteria ?? 0
 }

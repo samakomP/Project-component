@@ -37,7 +37,7 @@ const handleLogout = () => {
         </button>
 
 
-          <RouterLink :to="{ name: 'userdetail-view', params: { id: authStore.user?.users_ID } }" class="flex items-center gap-3">
+          <RouterLink :to="{ name: 'userdetail-view', params: { id: authStore.user?.id } }" class="flex items-center gap-3">
           <span class="font-serif font-medium text-lg text-gray-900">
             {{ user.username|| 'Guest' }}
           </span>
@@ -66,7 +66,7 @@ const handleLogout = () => {
         </button>
 
         <nav class="flex flex-col gap-8 grow text-center text-4xl font-serif font-medium">
-          <RouterLink :to="{ name: 'userhome-view', params: { id: authStore.user?.users_ID } }" @click="toggleSidebar" class=" text-black hover:text-gray-600 transition" exact-active-class="text-green-500 underline underline-offset-4 decoration-2">Home</RouterLink>
+          <RouterLink :to="{ name: 'userhome-view', params: { id: authStore.user?.id } }" @click="toggleSidebar" class=" text-black hover:text-gray-600 transition" exact-active-class="text-green-500 underline underline-offset-4 decoration-2">Home</RouterLink>
           <RouterLink to="/e-learning" @click="toggleSidebar" class=" text-black hover:text-gray-600 transition" exact-active-class="text-green-500 underline underline-offset-4 decoration-2">E-Learning</RouterLink>
           <RouterLink to="/benefits" @click="toggleSidebar" class=" text-black hover:text-gray-600 transition" exact-active-class="text-green-500 underline underline-offset-4 decoration-2">Benefits</RouterLink>
           <RouterLink to="/exam" @click="toggleSidebar" class="text-black hover:text-gray-600 transition" exact-active-class="text-green-500 underline underline-offset-4 decoration-2">Exam</RouterLink>
