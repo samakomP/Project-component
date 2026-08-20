@@ -6,6 +6,14 @@ import { getLevels } from '@/services/LevelService'
 import { getQuestionsByLevel } from '@/services/ExamService'
 import BackHome from '@/components/BackHome.vue'
 import { useAuthStore } from '@/stores/Auth'
+import { useMessageStore } from '@/stores/message'
+import { storeToRefs } from 'pinia'
+
+
+
+const messageStore = useMessageStore()
+const { messageEdit } = storeToRefs(messageStore)
+
 
 const levelsData = computed(() =>
   getLevels().map(level => ({
@@ -22,6 +30,10 @@ const authStore = useAuthStore()
 <template>
   <div class="w-full flex flex-col items-center mt-6 px-4 pb-12 font-sans text-black">
     <CardBase class="relative !bg-[#f2f2f2] p-8 md:p-12 w-full max-w-5xl flex flex-col gap-8 rounded-[40px]">
+      <div v-if="messageEdit" id="flashMessage"
+        class="absolute -top-18 left-1/2 -translate-x-1/2 w-fit z-50 shadow-md rounded-3xl px-6 py-3 bg-orange-500">
+        <h4 class="font-bold text-gray-800">{{ messageEdit }}</h4>
+      </div>
       <back-home class=" absolute top-5 left-8"/>
       <div class="flex items-center gap-4 mb-2 mt-6">
                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
