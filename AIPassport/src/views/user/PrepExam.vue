@@ -6,6 +6,7 @@ import CardBase from '@/components/CardBase.vue'
 import PillLevel from '@/components/PillLevel.vue'
 import StatTile from '@/components/StatTile.vue'
 import AttemptField from '@/components/AttemptField.vue'
+import BackHome from '@/components/BackHome.vue'
 import { useUserStore } from '@/stores/user'
 import { getExamLevel, getQuestionsByLevel, getExamHistoryByUser } from '@/services/ExamService'
 import { getPassCriteria } from '@/services/LevelService'
@@ -62,9 +63,9 @@ function formatDate(dateTime: string) {
 
 <template>
   <div class="w-full flex flex-col items-center mt-4 px-4 pb-12 font-serif text-black">
-    <CardBase class="p-8 md:p-12 w-full max-w-5xl flex flex-col gap-10">
+    <CardBase class="relative p-8 md:p-12 w-full max-w-5xl flex flex-col gap-10">
       <div class="flex flex-col md:flex-row gap-12 w-full">
-
+        <back-home class="absolute -top-3 -left-8"/>
         <div class="w-full md:w-1/3 flex flex-col items-center md:items-start gap-6">
           <div class="flex justify-center w-full">
             <PillLevel class="text-2xl font-bold px-10 py-2">

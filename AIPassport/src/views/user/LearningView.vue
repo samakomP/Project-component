@@ -3,6 +3,9 @@ import { ref, computed } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia'
 
+import BackHome from '@/components/BackHome.vue'
+import { getELearningByLevel } from '@/services/ElearningService'
+
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
 
@@ -14,70 +17,36 @@ function getYoutubeThumbnail(url: string) {
   return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : ''
 }
 
-type Video = {
-  id: number
-  youtubeUrl: string
-  isComplete: boolean
+const videos = computed(() => getELearningByLevel(currentUserLevel.value))
+
+// Completion tracking is UI-only — the e-learning data itself carries no progress field.
+const completedIds = ref<Set<number>>(new Set())
+
+function isComplete(id: number) {
+  return completedIds.value.has(id)
 }
 
-type Level = {
-  level: number
-  levelName: string
-  videos: Video[]
-}
-
-const elearningData = ref<Level[]>([
-  {
-    level: 1,
-    levelName: 'Level 1',
-    videos: [
-      { id: 1, youtubeUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', isComplete: true },
-      { id: 2, youtubeUrl: 'https://www.youtube.com/watch?v=jNQXAC9IVRw', isComplete: true }
-    ]
-  },
-  {
-    level: 2,
-    levelName: 'Level 2',
-    videos: [
-      { id: 3, youtubeUrl: 'https://youtu.be/M7lc1UVf-VE', isComplete: false },
-      { id: 4, youtubeUrl: 'https://www.youtube.com/watch?v=3JZ_D3ELwOQ', isComplete: false }
-    ]
-  },
-  {
-    level: 3,
-    levelName: 'Level 3',
-    videos: [
-      { id: 5, youtubeUrl: 'https://www.youtube.com/watch?v=V-_O7nl0Ii0', isComplete: false }
-    ]
+function toggleComplete(id: number) {
+  if (completedIds.value.has(id)) {
+    completedIds.value.delete(id)
+  } else {
+    completedIds.value.add(id)
   }
-])
-
-const currentLevelBlock = computed(() =>
-  elearningData.value.find(level => level.level === currentUserLevel.value)
-)
+}
 
 const progressPercentage = computed(() => {
-  const videos = currentLevelBlock.value?.videos ?? []
-  if (videos.length === 0) return 0
-  const completedVideos = videos.filter(v => v.isComplete).length
-  return Math.round((completedVideos / videos.length) * 100)
+  if (videos.value.length === 0) return 0
+  const completedCount = videos.value.filter(video => isComplete(video.id)).length
+  return Math.round((completedCount / videos.value.length) * 100)
 })
-
-function toggleComplete(video: Video) {
-  video.isComplete = !video.isComplete
-}
 </script>
 
 <template>
   <div class="w-full flex flex-col items-center mt-4 px-4 pb-12 font-serif">
 
     <div class="w-full max-w-3xl bg-[#f2f2f2] rounded-[40px] p-8 md:p-12 shadow-sm flex flex-col gap-12">
-
-      <router-link :to="{ name: 'userhome-view', params: { id: user?.id } }"
-        class="self-start bg-[#FCC084] text-[#003366] font-bold text-lg px-6 py-2 rounded-full hover:opacity-80 transition">
-        &larr; Home
-      </router-link>
-
+      <back-home/>
+      
       <div class="flex flex-col md:flex-row items-center md:items-start gap-8">
 
         <div class="w-32 h-32 bg-[#e6e6e6] rounded-full flex items-center justify-center shrink-0">
@@ -106,27 +75,29 @@ function toggleComplete(video: Video) {
         </div>
       </div>
 
-      <div v-if="currentLevelBlock" class="flex flex-col items-center gap-8">
+      <div v-if="videos.length > 0" class="flex flex-col items-center gap-8">
 
         <h2 class="w-full max-w-lg text-2xl font-bold text-gray-900 border-b-2 border-gray-300 pb-2 text-center md:text-left">
-          {{ currentLevelBlock.levelName }}
+          Level {{ currentUserLevel }}
         </h2>
 
-        <div v-for="video in currentLevelBlock.videos" :key="video.id" class="flex flex-col items-center w-full max-w-lg gap-4">
+        <div v-for="video in videos" :key="video.id" class="flex flex-col items-center w-full max-w-lg gap-4">
 
-          <a :href="video.youtubeUrl" target="_blank" rel="noopener noreferrer"
+          <a :href="video.videoUrl" target="_blank" rel="noopener noreferrer"
             class="w-full aspect-video bg-[#d9d9d9] rounded-2xl relative flex items-center justify-center overflow-hidden">
-            <img v-if="video.youtubeUrl" :src="getYoutubeThumbnail(video.youtubeUrl)" alt="Video Thumbnail" class="absolute inset-0 w-full h-full object-cover" />
+            <img v-if="video.videoUrl" :src="getYoutubeThumbnail(video.videoUrl)" alt="Video Thumbnail" class="absolute inset-0 w-full h-full object-cover" />
             <div class="absolute inset-0 bg-black/20"></div>
             <svg class="w-20 h-20 text-black fill-current relative" viewBox="0 0 24 24">
               <path d="M8 5v14l11-7z"/>
             </svg>
           </a>
 
-          <button @click="toggleComplete(video)"
-            :class="video.isComplete ? 'bg-gray-300 text-gray-600' : 'bg-[#5BF09F] text-black'"
+          <span class="font-bold text-gray-900 text-center">{{ video.title }}</span>
+
+          <button @click="toggleComplete(video.id)"
+            :class="isComplete(video.id) ? 'bg-gray-300 text-gray-600' : 'bg-[#5BF09F] text-black'"
             class="font-bold text-lg px-8 py-2 rounded-full hover:brightness-95 transition">
-            {{ video.isComplete ? 'Completed' : 'Mark Complete' }}
+            {{ isComplete(video.id) ? 'Completed' : 'Mark Complete' }}
           </button>
 
         </div>
