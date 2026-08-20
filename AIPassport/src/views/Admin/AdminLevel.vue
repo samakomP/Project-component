@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { RouterLink } from 'vue-router'
 import CardBase from '@/components/CardBase.vue'
 import { getLevels } from '@/services/LevelService'
 import { getQuestionsByLevel } from '@/services/ExamService'
 import BackHome from '@/components/BackHome.vue'
+import { useAuthStore } from '@/stores/Auth'
 
 const levelsData = computed(() =>
   getLevels().map(level => ({
@@ -13,6 +15,8 @@ const levelsData = computed(() =>
     totalQuestions: getQuestionsByLevel(level.levelNumber).length,
   }))
 )
+
+const authStore = useAuthStore()
 </script>
 
 <template>
@@ -48,15 +52,15 @@ const levelsData = computed(() =>
             <span class="text-lg">{{ item.totalQuestions }}</span>
           </div>
           
-          <button class="bg-[#A7F3D0] text-black font-bold px-6 py-2 rounded-full text-center flex flex-col items-center justify-center w-full md:w-[130px] leading-tight cursor-pointer hover:brightness-95 transition">
+          <RouterLink :to="{ name: 'admin-exam-detail', params: { id: authStore.user?.id, level: item.level } }" class="bg-[#A7F3D0] text-black font-bold px-6 py-2 rounded-full text-center flex flex-col items-center justify-center w-full md:w-[130px] leading-tight cursor-pointer hover:brightness-95 transition">
             <span class="text-sm">Exam</span>
             <span class="text-sm">Detail</span>
-          </button>
+          </RouterLink>
           
-          <button class="bg-[#A7F3D0] text-black font-bold px-6 py-2 rounded-full text-center flex flex-col items-center justify-center w-full md:w-[130px] leading-tight cursor-pointer hover:brightness-95 transition">
+          <RouterLink :to="{ name:'admin-level-detail', params: { id: authStore.user?.id, level: item.level } }" class="bg-[#A7F3D0] text-black font-bold px-6 py-2 rounded-full text-center flex flex-col items-center justify-center w-full md:w-[130px] leading-tight cursor-pointer hover:brightness-95 transition">
             <span class="text-sm">View</span>
             <span class="text-sm">Detail</span>
-          </button>
+          </RouterLink>
 
         </div>
       </div>

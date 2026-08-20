@@ -16,6 +16,9 @@ import ExamView from '@/views/user/ExamView.vue'
 import ResultView from '@/views/user/ResultView.vue'
 import AdminHomePage from '@/views/Admin/HomePage.vue'
 import AdminLevel from '@/views/Admin/AdminLevel.vue'
+import LevelDetail from '@/views/Admin/LevelDetail.vue'
+import EditLevel from '@/views/Admin/events/EditLevel.vue'
+import ExamDetail from '@/views/Admin/ExamDetail.vue'
 
 import CardBase from '@/components/CardBase.vue'
 import { useUserStore } from '@/stores/user'
@@ -60,6 +63,36 @@ const router = createRouter({
       path: '/admin/:id/level',
       name: 'admin-level',
       component: AdminLevel,
+      beforeEnter: (to) => {
+        const userStore = useUserStore()
+        userStore.setUser(Number(to.params.id))
+      },
+      meta: { requiresAdmin: true }
+    },
+    {
+      path: '/admin/:id/level/:level',
+      name: 'admin-level-detail',
+      component: LevelDetail,
+      beforeEnter: (to) => {
+        const userStore = useUserStore()
+        userStore.setUser(Number(to.params.id))
+      },
+      meta: { requiresAdmin: true }
+    },
+    {
+      path: '/admin/:id/level/:level/edit',
+      name: 'admin-edit-level',
+      component: EditLevel,
+      beforeEnter: (to) => {
+        const userStore = useUserStore()
+        userStore.setUser(Number(to.params.id))
+      },
+      meta: { requiresAdmin: true }
+    },
+    {
+      path: '/admin/:id/level/:level/exam',
+      name: 'admin-exam-detail',
+      component: ExamDetail,
       beforeEnter: (to) => {
         const userStore = useUserStore()
         userStore.setUser(Number(to.params.id))
