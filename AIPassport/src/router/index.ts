@@ -78,7 +78,7 @@ const router = createRouter({
       children: [
         {
           path: '',
-          redirect: { name: 'userdetail-view' }
+          redirect: (to) => ({ name: 'userdetail-view', params: to.params })
         },
         {
           path: 'UserDetail',

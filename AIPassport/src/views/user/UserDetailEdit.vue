@@ -5,11 +5,13 @@ import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia'
 import CardBase from '@/components/CardBase.vue'
 import UserEditForm from '@/components/EditForm.vue'
+import { useMessageStore } from '@/stores/message'
+
 
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
 const router = useRouter()
-
+const store = useMessageStore()
 
 const initialFormData = ref({
   fName: '',
@@ -29,14 +31,19 @@ onMounted(() => {
       province: user.value.province || ''
     }
   }
+  isDataReady.value = true
 })
 
 const handleSave = () => {
+  store.updateMessageEdit(`The User Deatils was update!`)
+  setTimeout(() => {
+      store.resetMessageEdit()
+    }, 3000)
 
   router.push({
     name: 'userdetail-view',
     params: { id: user.value?.users_ID },
-    query: { updated: 'true' }
+    query: { updated: 'true' },
   })
 }
 

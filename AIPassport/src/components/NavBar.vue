@@ -37,7 +37,7 @@ const handleLogout = () => {
         </button>
 
 
-          <RouterLink :to="{ name: 'userprofile-view', params: { id: authStore.user?.users_ID } }" class="flex items-center gap-3">
+          <RouterLink :to="{ name: 'userdetail-view', params: { id: authStore.user?.users_ID } }" class="flex items-center gap-3">
           <span class="font-serif font-medium text-lg text-gray-900">
             {{ user.username|| 'Guest' }}
           </span>
