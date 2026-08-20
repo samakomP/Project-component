@@ -5,14 +5,14 @@ import { storeToRefs } from 'pinia'
 import CardBase from '@/components/CardBase.vue'
 import PillLevel from '@/components/PillLevel.vue'
 import { useUserStore } from '@/stores/user'
-import { getQuestionsByLevel, getExamHistoryByUser } from '@/services/ExamService'
+import { getExamLevel, getQuestionsByLevel, getExamHistoryByUser } from '@/services/ExamService'
 import { getPassCriteria } from '@/services/LevelService'
 
 const route = useRoute()
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
 
-const currentLevel = computed(() => Number(route.params.level) || user.value?.level || 3)
+const currentLevel = computed(() => getExamLevel(route.params.level, user.value?.level))
 
 const totalQuestions = computed(() => getQuestionsByLevel(currentLevel.value).length)
 const passScore = computed(() => getPassCriteria(currentLevel.value))
@@ -55,6 +55,7 @@ function formatDate(dateTime: string) {
   const month = String(date.getMonth() + 1).padStart(2, '0')
   return `${day}-${month}-${date.getFullYear()}`
 }
+
 </script>
 
 <template>
@@ -127,9 +128,12 @@ function formatDate(dateTime: string) {
       </div>
 
       <div class="flex justify-center mt-6">
-        <button class="bg-[#5BF09F] text-[#003366] font-bold text-2xl md:text-3xl px-14 py-4 rounded-full hover:brightness-95 transition tracking-wide cursor-pointer">
+        <RouterLink
+          :to="{ name: 'take-exam-view', params: { id: user?.id, level: currentLevel } }"
+          class="bg-[#5BF09F] text-[#003366] font-bold text-2xl md:text-3xl px-14 py-4 rounded-full hover:brightness-95 transition tracking-wide cursor-pointer"
+        >
           Start Exam
-        </button>
+        </RouterLink>
       </div>
     </CardBase>
   </div>
