@@ -41,7 +41,7 @@ const goToEdit = () => {
 <template>
   <div v-if="user" class="space-y-8 relative">
       <div id="flashMessage" v-if= "messageEdit"
-        class="absolute top-0 left-1/2 -translate-x-1/2 w-fit z-50 shadow-md rounded-3xl px-6 py-3 bg-pink-200">
+        class="absolute top-3 left-1/2 -translate-x-1/2 w-fit z-50 shadow-md rounded-3xl px-6 py-3 bg-pink-200">
         <h4 class="font-bold text-gray-800">{{ messageEdit }}</h4>
       </div>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-y-13 gap-x-8 text-lg pt-20 font-serif">
