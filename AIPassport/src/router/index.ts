@@ -11,6 +11,7 @@ import UserHistExam from '@/views/user/HistoryExam.vue'
 import UserService from '@/views/user/UserServices.vue'
 import PrepExam from '@/views/user/PrepExam.vue'
 import ExamView from '@/views/user/ExamView.vue'
+import ResultView from '@/views/user/ResultView.vue'
 
 import CardBase from '@/components/CardBase.vue'
 import { useUserStore } from '@/stores/user'
@@ -53,6 +54,12 @@ const router = createRouter({
       path: '/exam/:id/:level/take',
       name: 'take-exam-view',
       component: ExamView,
+      beforeEnter: setUserFromParams
+    },
+    {
+      path: '/exam/:id/:level/result',
+      name: 'result-view',
+      component: ResultView,
       beforeEnter: setUserFromParams
     },
     {

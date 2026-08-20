@@ -102,7 +102,7 @@ function submitExam() {
   if (!user.value) return
 
   examStore.submitExam(user.value.id, currentLevel.value)
-  router.push({ name: 'user-history-view', params: { id: user.value.id } })
+  router.push({ name: 'result-view', params: { id: user.value.id, level: currentLevel.value } })
 }
 
 function quitExam() {

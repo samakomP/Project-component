@@ -87,15 +87,15 @@ function formatDate(dateTime: string) {
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <StatTile :value="totalQuestions">Total<br>Question</StatTile>
 
-            <CardBase class="!bg-[#dcdcdc] !rounded-[40px] !shadow-none p-6 flex items-center justify-center aspect-square gap-2">
-              <span class="text-6xl font-bold">NO</span>
-              <div class="flex flex-col text-[10px] font-bold text-left leading-tight mt-1">
+            <CardBase class="!bg-[#dcdcdc] !rounded-[40px] !shadow-none p-6 flex justify-center aspect-square gap-2 relative">
+              <span class="absolute left-2 top-15 text-5xl font-bold">NO</span>
+              <div class="absolute right-1 top-17 grid-cols-2 flex flex-col text-[12px] font-bold text-left leading-tight mt-1">
                 <span>Limit Time</span>
                 <span>Limit attempt</span>
               </div>
             </CardBase>
 
-            <StatTile :value="`${passScore}%`">Pass score</StatTile>
+            <StatTile :value="`${passScore}%`" class="items-center justify-center mx-auto font-extrabold">Pass score</StatTile>
           </div>
 
           <CardBase class="!bg-[#dcdcdc] !rounded-[40px] !shadow-none p-6 flex flex-col gap-4 mt-2 min-h-[140px] justify-center">
