@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { RouterLink, useRoute } from 'vue-router'
 import CardBase from '@/components/CardBase.vue'
 import { getUsers } from '@/services/UserService'
+
+const route = useRoute()
 
 const totalUsers = computed(() => getUsers().length)
 const activeUsers = computed(() => getUsers().filter(user => user.active).length)
@@ -29,16 +32,18 @@ const activeUsers = computed(() => getUsers().filter(user => user.active).length
       </div>
 
       <div class="flex flex-col md:flex-row gap-8 w-full">
-        <CardBase class="!bg-[#e6e6e6] !rounded-[40px] !shadow-none p-12 flex flex-col items-center justify-center w-full md:w-1/2 cursor-pointer hover:scale-[1.02] transition-transform duration-300 min-h-[350px]">
-                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="size-40 items items-center justify-center mx-auto">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                    </svg>
-          <h2 class="text-[28px] font-bold">User Management</h2>
-        </CardBase>
+        <RouterLink :to="{ name: 'admin-management', params: { id: route.params.id } }" class="w-full md:w-1/2">
+          <CardBase class="!bg-[#e6e6e6] !rounded-[40px] !shadow-none p-12 flex flex-col items-center justify-center w-full cursor-pointer hover:scale-[1.02] transition-transform duration-300 min-h-[350px]">
+                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                          stroke="currentColor" class="size-40 items items-center justify-center mx-auto">
+                          <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                      </svg>
+            <h2 class="text-[28px] font-bold">User Management</h2>
+          </CardBase>
+        </RouterLink>
 
-        <CardBase class="!bg-[#e6e6e6] !rounded-[40px] !shadow-none p-12 flex flex-col items-center justify-center w-full md:w-1/2 cursor-pointer hover:scale-[1.02] transition-transform duration-300 min-h-[350px]">
+        <CardBase class="!bg-[#e6e6e6] !rounded-[40px] !shadow-none p-12 flex flex-col items-center justify-center w-full md:w-1/2 min-h-[350px] opacity-60">
                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-40">
                         <path stroke-linecap="round" stroke-linejoin="round"

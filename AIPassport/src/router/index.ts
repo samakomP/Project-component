@@ -15,6 +15,7 @@ import PrepExam from '@/views/user/PrepExam.vue'
 import ExamView from '@/views/user/ExamView.vue'
 import ResultView from '@/views/user/ResultView.vue'
 import AdminHomePage from '@/views/Admin/HomePage.vue'
+import UserManage from '@/views/Admin/UserManage.vue'
 
 import CardBase from '@/components/CardBase.vue'
 import { useUserStore } from '@/stores/user'
@@ -49,6 +50,16 @@ const router = createRouter({
       path: '/admin/:id',
       name: 'admin-home-view',
       component: AdminHomePage,
+      beforeEnter: (to) => {
+        const userStore = useUserStore()
+        userStore.setUser(Number(to.params.id))
+      },
+      meta: { requiresAdmin: true }
+    },
+    {
+      path: '/admin/:id/users',
+      name: 'admin-management',
+      component: UserManage,
       beforeEnter: (to) => {
         const userStore = useUserStore()
         userStore.setUser(Number(to.params.id))
