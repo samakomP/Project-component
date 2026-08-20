@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, type RouteLocationNormalized } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 
 import LoginView from '@/views/LoginView.vue'
 import RegisterView from '@/views/RegisterView.vue'
@@ -14,14 +14,11 @@ import LevelNBenefit from '@/views/user/LevelBenefit.vue'
 import PrepExam from '@/views/user/PrepExam.vue'
 import ExamView from '@/views/user/ExamView.vue'
 import ResultView from '@/views/user/ResultView.vue'
+import AdminHomePage from '@/views/Admin/HomePage.vue'
+import UserManage from '@/views/Admin/UserManage.vue'
 
 import CardBase from '@/components/CardBase.vue'
 import { useUserStore } from '@/stores/user'
-
-function setUserFromParams(to: RouteLocationNormalized) {
-  const userStore = useUserStore()
-  userStore.setUser(Number(to.params.id))
-}
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,25 +41,57 @@ const router = createRouter({
       path: '/home/:id',
       name: 'userhome-view',
       component: HomeView,
-      beforeEnter: setUserFromParams
+      beforeEnter: (to) => {
+        const userStore = useUserStore()
+        userStore.setUser(Number(to.params.id))
+      }
+    },
+    {
+      path: '/admin/:id',
+      name: 'admin-home-view',
+      component: AdminHomePage,
+      beforeEnter: (to) => {
+        const userStore = useUserStore()
+        userStore.setUser(Number(to.params.id))
+      },
+      meta: { requiresAdmin: true }
+    },
+    {
+      path: '/admin/:id/users',
+      name: 'admin-management',
+      component: UserManage,
+      beforeEnter: (to) => {
+        const userStore = useUserStore()
+        userStore.setUser(Number(to.params.id))
+      },
+      meta: { requiresAdmin: true }
     },
     {
       path: '/exam/:id/:level?',
       name: 'exam-view',
       component: PrepExam,
-      beforeEnter: setUserFromParams
+      beforeEnter: (to) => {
+        const userStore = useUserStore()
+        userStore.setUser(Number(to.params.id))
+      }
     },
     {
       path: '/exam/:id/:level/take',
       name: 'take-exam-view',
       component: ExamView,
-      beforeEnter: setUserFromParams
+      beforeEnter: (to) => {
+        const userStore = useUserStore()
+        userStore.setUser(Number(to.params.id))
+      }
     },
     {
       path: '/exam/:id/:level/result',
       name: 'result-view',
       component: ResultView,
-      beforeEnter: setUserFromParams
+      beforeEnter: (to) => {
+        const userStore = useUserStore()
+        userStore.setUser(Number(to.params.id))
+      }
     },
     {
       path: '/e-learning/:id',
@@ -78,7 +107,10 @@ const router = createRouter({
       name: 'userprofile-view',
       component: UserProfile,
       props: true,
-      beforeEnter: setUserFromParams,
+      beforeEnter: (to) => {
+        const userStore = useUserStore()
+        userStore.setUser(Number(to.params.id))
+      },
       children: [
         {
           path: '',

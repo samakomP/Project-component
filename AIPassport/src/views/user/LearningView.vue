@@ -19,7 +19,6 @@ function getYoutubeThumbnail(url: string) {
 
 const videos = computed(() => getELearningByLevel(currentUserLevel.value))
 
-// Completion tracking is UI-only — the e-learning data itself carries no progress field.
 const completedIds = ref<Set<number>>(new Set())
 
 function isComplete(id: number) {
