@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-
 const props = defineProps<{
   initialData: {
     name: string
@@ -11,18 +10,14 @@ const props = defineProps<{
   }
 }>()
 
-
 const emit = defineEmits<{
   (e: 'save'): void
   (e: 'cancel'): void
 }>()
 
-
 const formData = ref({ ...props.initialData })
 
-
 const onSubmit = () => {
-
   emit('save')
 }
 
