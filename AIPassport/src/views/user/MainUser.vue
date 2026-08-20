@@ -44,7 +44,7 @@ const { user } = storeToRefs(userStore)
       </div>
     </div>
 
-    <RouterLink to="/benefits" class="block h-full">
+    <RouterLink :to="{ name: 'levelBenefit-view', params: { id: user.id } }" class="block h-full">
       <CardBase class="p-18 text-center items-center justify-center hover:scale-106 transition">
         <p class="text-gray-500 font-medium mb-2">You're current level at</p>
         <h2 class="text-5xl font-black text-gray-900 mb-8">{{ user.level}}</h2>

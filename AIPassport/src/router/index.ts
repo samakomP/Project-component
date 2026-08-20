@@ -10,6 +10,7 @@ import UserDetailEdit from '@/views/user/UserDetailEdit.vue'
 import UserHistExam from '@/views/user/HistoryExam.vue'
 import UserService from '@/views/user/UserServices.vue'
 import LearningView from '@/views/user/LearningView.vue'
+import LevelNBenefit from '@/views/user/LevelBenefit.vue'
 
 import CardBase from '@/components/CardBase.vue'
 import { useUserStore } from '@/stores/user'
@@ -89,7 +90,17 @@ const router = createRouter({
           component: UserService
         },
       ]
-  }],
+    },
+    {
+      path: '/levelNbenefit/:id',
+      name: 'levelBenefit-view',
+      component: LevelNBenefit,
+      beforeEnter: (to) => {
+        const userStore = useUserStore()
+        userStore.setUser(Number(to.params.id))
+      }
+    }
+],
 })
 
 export default router
