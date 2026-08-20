@@ -19,6 +19,10 @@ function toQuestion(raw: (typeof questions)[number]): Question {
   }
 }
 
+export function getExamLevel(routeLevel: unknown, userLevel?: number): number {
+  return Number(routeLevel) || userLevel || 3
+}
+
 export function getQuestionsByLevel(level: number): Question[] {
   return questions
     .filter(question => question.level_ID === level)

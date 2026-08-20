@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, type RouteLocationNormalized } from 'vue-router'
 
 import LoginView from '@/views/LoginView.vue'
 import RegisterView from '@/views/RegisterView.vue'
@@ -11,9 +11,17 @@ import UserHistExam from '@/views/user/HistoryExam.vue'
 import UserService from '@/views/user/UserServices.vue'
 import LearningView from '@/views/user/LearningView.vue'
 import LevelNBenefit from '@/views/user/LevelBenefit.vue'
+import PrepExam from '@/views/user/PrepExam.vue'
+import ExamView from '@/views/user/ExamView.vue'
+import ResultView from '@/views/user/ResultView.vue'
 
 import CardBase from '@/components/CardBase.vue'
 import { useUserStore } from '@/stores/user'
+
+function setUserFromParams(to: RouteLocationNormalized) {
+  const userStore = useUserStore()
+  userStore.setUser(Number(to.params.id))
+}
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -36,10 +44,25 @@ const router = createRouter({
       path: '/home/:id',
       name: 'userhome-view',
       component: HomeView,
-      beforeEnter: (to) => {
-        const userStore = useUserStore()
-        userStore.setUser(Number(to.params.id))
-      }
+      beforeEnter: setUserFromParams
+    },
+    {
+      path: '/exam/:id/:level?',
+      name: 'exam-view',
+      component: PrepExam,
+      beforeEnter: setUserFromParams
+    },
+    {
+      path: '/exam/:id/:level/take',
+      name: 'take-exam-view',
+      component: ExamView,
+      beforeEnter: setUserFromParams
+    },
+    {
+      path: '/exam/:id/:level/result',
+      name: 'result-view',
+      component: ResultView,
+      beforeEnter: setUserFromParams
     },
     {
       path: '/e-learning/:id',
@@ -55,10 +78,7 @@ const router = createRouter({
       name: 'userprofile-view',
       component: UserProfile,
       props: true,
-      beforeEnter: (to) => {
-        const userStore = useUserStore()
-        userStore.setUser(Number(to.params.id))
-      },
+      beforeEnter: setUserFromParams,
       children: [
         {
           path: '',

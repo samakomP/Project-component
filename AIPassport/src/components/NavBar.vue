@@ -69,7 +69,7 @@ const handleLogout = () => {
           <RouterLink :to="{ name: 'userhome-view', params: { id: authStore.user?.id } }" @click="toggleSidebar" class=" text-black hover:text-gray-600 transition" exact-active-class="text-green-500 underline underline-offset-4 decoration-2">Home</RouterLink>
           <RouterLink :to="{ name: 'learning-view', params: { id: authStore.user?.id } }" @click="toggleSidebar" class=" text-black hover:text-gray-600 transition" exact-active-class="text-green-500 underline underline-offset-4 decoration-2">E-Learning</RouterLink>
           <RouterLink :to="{ name: 'levelBenefit-view', params: { id: authStore.user?.id } }" @click="toggleSidebar" class=" text-black hover:text-gray-600 transition" exact-active-class="text-green-500 underline underline-offset-4 decoration-2">Benefits</RouterLink>
-          <RouterLink to="/exam" @click="toggleSidebar" class="text-black hover:text-gray-600 transition" exact-active-class="text-green-500 underline underline-offset-4 decoration-2">Exam</RouterLink>
+          <RouterLink :to="{ name: 'exam-view', params: { id: authStore.user?.id } }" @click="toggleSidebar" class="text-black hover:text-gray-600 transition" exact-active-class="text-green-500 underline underline-offset-4 decoration-2">Exam</RouterLink>
         </nav>
 
         <button @click="handleLogout" class="flex items-center gap-2 text-3xl font-serif font-bold text-red-600 underline underline-offset-4 decoration-3 hover:opacity-70 mt-auto mb-8 ml-7">
