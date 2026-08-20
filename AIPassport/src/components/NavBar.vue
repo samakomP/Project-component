@@ -67,7 +67,7 @@ const handleLogout = () => {
 
         <nav class="flex flex-col gap-8 grow text-center text-4xl font-serif font-medium">
           <RouterLink :to="{ name: 'userhome-view', params: { id: authStore.user?.id } }" @click="toggleSidebar" class=" text-black hover:text-gray-600 transition" exact-active-class="text-green-500 underline underline-offset-4 decoration-2">Home</RouterLink>
-          <RouterLink to="/e-learning" @click="toggleSidebar" class=" text-black hover:text-gray-600 transition" exact-active-class="text-green-500 underline underline-offset-4 decoration-2">E-Learning</RouterLink>
+          <RouterLink :to="{ name: 'learning-view', params: { id: authStore.user?.id } }" @click="toggleSidebar" class=" text-black hover:text-gray-600 transition" exact-active-class="text-green-500 underline underline-offset-4 decoration-2">E-Learning</RouterLink>
           <RouterLink to="/benefits" @click="toggleSidebar" class=" text-black hover:text-gray-600 transition" exact-active-class="text-green-500 underline underline-offset-4 decoration-2">Benefits</RouterLink>
           <RouterLink to="/exam" @click="toggleSidebar" class="text-black hover:text-gray-600 transition" exact-active-class="text-green-500 underline underline-offset-4 decoration-2">Exam</RouterLink>
         </nav>

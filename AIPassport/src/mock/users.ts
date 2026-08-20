@@ -21,8 +21,7 @@ export const users = [
       "province": "Chiang Mai",
       "profileImg": "/images/profiles/omsin01.jpg",
       "isActivate": true,
-      "level_ID": 1
-    },
+      "level_ID": 4   },
     {
       "users_ID": 3,
       "username": "somchai01",

@@ -19,7 +19,7 @@ const { user } = storeToRefs(userStore)
       </CardBase>
 
       <div class="grid grid-cols-2 gap-8 flex-1">
-        <RouterLink to="/e-learning" class="block h-full">
+        <RouterLink :to="{ name: 'learning-view', params: { id: user.id } }" class="block h-full">
           <CardBase class="p-15 items-center justify-center text-center gap-4 hover:scale-106 transition">
             <div class="mx-auto relative w-20 h-20 mb-4">
               <svg class="w-20 h-20 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
