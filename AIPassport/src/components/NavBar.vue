@@ -76,9 +76,9 @@ const handleLogout = () => {
       </button>
 
       <nav class="flex flex-col gap-12 text-3xl font-serif font-bold w-full pl-6">
-        <RouterLink :to="{ name: 'admin-home-view', params: { id: authStore.user?.id } }" @click="toggleSidebar" class="text-black hover:opacity-70 transition underline underline-offset-8 decoration-2">Dashboard</RouterLink>
-        <span class="text-black/50 cursor-not-allowed">User</span>
-        <span class="text-black/50 cursor-not-allowed">Level</span>
+        <RouterLink :to="{ name: 'admin-home-view', params: { id: authStore.user?.id } }" @click="toggleSidebar" class="text-black hover:opacity-70  hover:underline hover:underline-offset-8 hover:decoration-2 transition cursor-pointer">Dashboard</RouterLink>
+        <span class="text-black/50">User</span>
+        <RouterLink :to="{ name: 'admin-level', params: { id: authStore.user?.id } }" @click="toggleSidebar" class="text-black hover:opacity-70 hover:underline hover:underline-offset-8 hover:decoration-2 transition cursor-pointer">Level</RouterLink>
       </nav>
 
       <button @click="handleLogout" class="flex items-center gap-3 text-3xl font-serif font-bold text-[#cc3300] underline underline-offset-8 decoration-3 hover:opacity-70 mt-auto mb-10 pl-6">
