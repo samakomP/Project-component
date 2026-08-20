@@ -60,6 +60,9 @@ const { user } = storeToRefs(userStore)
         </div>
       </CardBase>
     </RouterLink>
+    <RouterLink :to="{ name: 'user-aservice', params: { id: user.id } }" class="bg-black/30 rounded-full py-4 px-4 mx-auto text-3xl font-bold absolute bottom-4 right-23 hover:animate-bounce">
+        A?
+    </RouterLink>
 
   </div>
 </div>

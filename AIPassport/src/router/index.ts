@@ -14,6 +14,7 @@ import LevelNBenefit from '@/views/user/LevelBenefit.vue'
 import PrepExam from '@/views/user/PrepExam.vue'
 import ExamView from '@/views/user/ExamView.vue'
 import ResultView from '@/views/user/ResultView.vue'
+import UserAService from '@/views/user/UserASesrvice.vue'
 import AdminHomePage from '@/views/Admin/HomePage.vue'
 import AdminLevel from '@/views/Admin/AdminLevel.vue'
 import LevelDetail from '@/views/Admin/LevelDetail.vue'
@@ -27,6 +28,7 @@ import AdminEditview from '@/views/Admin/events/AdminEditview.vue'
 
 import CardBase from '@/components/CardBase.vue'
 import { useUserStore } from '@/stores/user'
+import UserASesrvice from '@/views/user/UserASesrvice.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,6 +46,11 @@ const router = createRouter({
       path: '/test',
       name: 'test-component',
       component: CardBase
+    },
+    {
+      path: '/aservice',
+      name: 'user-aservice',
+      component: UserASesrvice
     },
     {
       path: '/home/:id',
@@ -221,6 +228,15 @@ const router = createRouter({
           component: UserService
         },
       ]
+    },
+    {
+      path: '/aservice/:id',
+      name: 'user-aservice',
+      component: UserAService,
+      beforeEnter: (to) => {
+        const userStore = useUserStore()
+        userStore.setUser(Number(to.params.id))
+      }
     },
     {
       path: '/levelNbenefit/:id',
