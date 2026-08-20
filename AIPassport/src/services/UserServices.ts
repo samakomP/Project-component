@@ -1,5 +1,4 @@
 import axios, { type AxiosResponse } from 'axios'
-// import db from '@/mock/db.json'
 
 const apiClient = axios.create({
     baseURL:'https://my-json-server.typicode.com/Prototean/Project-331-Username',

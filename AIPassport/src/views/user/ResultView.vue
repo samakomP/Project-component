@@ -34,16 +34,10 @@ const handleAction = () => {
 </script>
 
 <template>
-  <!--
-    Safe to edit below: class strings (colors, sizes, spacing, layout) and static text.
-    Do NOT touch: @click handlers, {{ }} bindings, :class conditions, v-if/v-else —
-    those are wired to real score/pass-fail/routing logic in <script setup> above.
-  -->
   <div class="w-full flex flex-col items-center mt-8 px-4 pb-12 font-serif text-black">
 
     <CardBase class="relative p-10 pb-28 md:p-16 md:pb-32 w-full max-w-4xl flex flex-col items-center gap-14">
 
-      <!-- Pass/Fail status pill. Text and color driven by isPass — edit the two class strings, not the ternary itself -->
       <div
         class="mx-auto w-fit px-24 py-4 rounded-full text-6xl font-bold tracking-wide text-center"
         :class="isPass ? 'bg-[#5BF09F] text-[#591c0b]' : 'bg-[#fa995a] text-[#591c0b]'"
@@ -51,7 +45,6 @@ const handleAction = () => {
         {{ isPass ? 'Pass' : 'Fail' }}
       </div>
 
-      <!-- Score vs required-score pills. {{ score }} / {{ requiredScore }} are real numbers from the store — leave as is -->
       <div class="flex flex-col md:flex-row justify-between w-full max-w-2xl gap-15 md:gap-22 my-14">
         <div class="flex flex-col items-center gap-6 w-full">
           <h2 class="text-3xl font-bold tracking-wide">Your Score</h2>
@@ -68,11 +61,6 @@ const handleAction = () => {
         </div>
       </div>
 
-      <!--
-        Action buttons, pinned to the bottom corners of the card on md+ screens
-        (Home = bottom-left, History/Retry = bottom-right); stacked normally on mobile.
-        goHome/handleAction navigate via real router names — keep the @click attributes as they are.
-      -->
       <div class="w-full flex flex-col gap-4 md:block font-sans">
         <button
           @click="goHome"
@@ -81,7 +69,6 @@ const handleAction = () => {
           HOME
         </button>
 
-        <!-- handleAction goes to History on pass, back to the exam on fail (retry) — label follows isPass automatically -->
         <button
           @click="handleAction"
           class="bg-[#d4b3ff] text-[#003366] font-bold text-3xl px-16 py-3 rounded-full hover:brightness-95 transition tracking-wide w-full md:w-auto md:absolute md:bottom-8 md:right-8"
