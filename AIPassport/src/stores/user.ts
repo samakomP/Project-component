@@ -87,7 +87,7 @@ export const useUserStore = defineStore('user', () => {
     }
     const index = users.value.findIndex(u => u.id === id)
     if (index !== -1) {
-      users.value[index] = { ...users.value[index], ...data }
+      users.value[index] = { ...users.value[index], ...data } as User
     }
   }
 
