@@ -58,7 +58,7 @@ const router = createRouter({
       component: HomeView,
       beforeEnter: (to) => {
         const userStore = useUserStore()
-        userStore.setUser(Number(to.params.id))
+        return userStore.setUser(Number(to.params.id))
       }
     },
     {
@@ -67,7 +67,7 @@ const router = createRouter({
       component: AdminHomePage,
       beforeEnter: (to) => {
         const userStore = useUserStore()
-        userStore.setUser(Number(to.params.id))
+        return userStore.setUser(Number(to.params.id))
       },
       meta: { requiresAdmin: true }
     },
@@ -77,7 +77,7 @@ const router = createRouter({
       component: AdminLevel,
       beforeEnter: (to) => {
         const userStore = useUserStore()
-        userStore.setUser(Number(to.params.id))
+        return userStore.setUser(Number(to.params.id))
       },
       meta: { requiresAdmin: true }
     },
@@ -87,7 +87,7 @@ const router = createRouter({
       component: LevelDetail,
       beforeEnter: (to) => {
         const userStore = useUserStore()
-        userStore.setUser(Number(to.params.id))
+        return userStore.setUser(Number(to.params.id))
       },
       meta: { requiresAdmin: true }
     },
@@ -97,7 +97,7 @@ const router = createRouter({
       component: EditLevel,
       beforeEnter: (to) => {
         const userStore = useUserStore()
-        userStore.setUser(Number(to.params.id))
+        return userStore.setUser(Number(to.params.id))
       },
       meta: { requiresAdmin: true }
     },
@@ -107,7 +107,7 @@ const router = createRouter({
       component: ExamDetail,
       beforeEnter: (to) => {
         const userStore = useUserStore()
-        userStore.setUser(Number(to.params.id))
+        return userStore.setUser(Number(to.params.id))
       },
       meta: { requiresAdmin: true }
     },
@@ -117,7 +117,7 @@ const router = createRouter({
       component: UserManage,
       beforeEnter: (to) => {
         const userStore = useUserStore()
-        userStore.setUser(Number(to.params.id))
+        return userStore.setUser(Number(to.params.id))
       },
       meta: { requiresAdmin: true }
     },
@@ -127,7 +127,7 @@ const router = createRouter({
       component: AdminUserProfile,
       beforeEnter: (to) => {
         const userStore = useUserStore()
-        userStore.setUser(Number(to.params.id))
+        return userStore.setUser(Number(to.params.id))
       },
       meta: { requiresAdmin: true },
       children: [
@@ -158,7 +158,7 @@ const router = createRouter({
       component: PrepExam,
       beforeEnter: (to) => {
         const userStore = useUserStore()
-        userStore.setUser(Number(to.params.id))
+        return userStore.setUser(Number(to.params.id))
       }
     },
     {
@@ -167,7 +167,7 @@ const router = createRouter({
       component: ExamView,
       beforeEnter: (to) => {
         const userStore = useUserStore()
-        userStore.setUser(Number(to.params.id))
+        return userStore.setUser(Number(to.params.id))
       }
     },
     {
@@ -176,7 +176,7 @@ const router = createRouter({
       component: ResultView,
       beforeEnter: (to) => {
         const userStore = useUserStore()
-        userStore.setUser(Number(to.params.id))
+        return userStore.setUser(Number(to.params.id))
       }
     },
     {
@@ -185,7 +185,7 @@ const router = createRouter({
       component: LearningView,
       beforeEnter: (to) => {
         const userStore = useUserStore()
-        userStore.setUser(Number(to.params.id))
+        return userStore.setUser(Number(to.params.id))
       }
     },
     {
@@ -195,7 +195,7 @@ const router = createRouter({
       props: true,
       beforeEnter: (to) => {
         const userStore = useUserStore()
-        userStore.setUser(Number(to.params.id))
+        return userStore.setUser(Number(to.params.id))
       },
       children: [
         {
@@ -235,7 +235,7 @@ const router = createRouter({
       component: UserAService,
       beforeEnter: (to) => {
         const userStore = useUserStore()
-        userStore.setUser(Number(to.params.id))
+        return userStore.setUser(Number(to.params.id))
       }
     },
     {
@@ -244,7 +244,7 @@ const router = createRouter({
       component: LevelNBenefit,
       beforeEnter: (to) => {
         const userStore = useUserStore()
-        userStore.setUser(Number(to.params.id))
+        return userStore.setUser(Number(to.params.id))
       }
     }
 ],

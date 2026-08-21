@@ -16,7 +16,7 @@ const authData = ref<Auth>({
 })
 
 const handleLogin = async () => {
-  const role = await authStore.login(authData.value.username)
+  const role = await authStore.login(authData.value.username, authData.value.password)
   if (role === 'admin') {
     router.push({
       name: 'admin-home-view',
@@ -59,7 +59,7 @@ const handleLogin = async () => {
             type="text" 
             required 
             class="w-full px-4 py-3 border border-gray-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
-            placeholder="Admin1, user1, or user2"
+            placeholder="e.g. omsin01"
           />
         </div>
         

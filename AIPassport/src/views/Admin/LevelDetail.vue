@@ -1,10 +1,32 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useRoute, useRouter, RouterLink } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import CardBase from '@/components/CardBase.vue'
-import { getPassCriteria, getBenefitsByLevel, getServicesByLevel } from '@/services/LevelService'
+import LevelService from '@/services/LevelService'
+import UserServices from '@/services/UserServices'
 import { useMessageStore } from '@/stores/message'
+import type { Benefit, Service } from '@/types'
+
+interface BenefitRaw {
+  benefits_ID: number
+  level_ID: number
+  benefitName: string
+  description: string
+}
+
+interface LevelRaw {
+  level_ID: number
+  levelNumber: number
+  passCriteria: number
+}
+
+interface ServiceRaw {
+  service_ID: number
+  level_ID: number
+  serviceName: string
+  description: string
+}
 
 const route = useRoute()
 const router = useRouter()
@@ -13,12 +35,49 @@ const { messageEdit } = storeToRefs(messageStore)
 
 const level = computed(() => Number(route.params.level))
 
+const benefits = ref<Benefit[]>([])
+const services = ref<Service[]>([])
+const passRate = ref('')
+
 const levelDetail = computed(() => ({
   level: level.value,
-  passRate: `${getPassCriteria(level.value)}% Pass`,
-  benefits: getBenefitsByLevel(level.value),
-  services: getServicesByLevel(level.value),
+  passRate: passRate.value,
+  benefits: benefits.value,
+  services: services.value,
 }))
+
+onMounted(() => {
+  LevelService.getLevelByNumber(level.value).then((response) => {
+    const raw = response.data[0] as LevelRaw
+    passRate.value = `${raw.passCriteria}% Pass`
+  })
+
+  UserServices.getBenefitsByLevel(level.value)
+    .then((response) => {
+      benefits.value = response.data.map((benefit: BenefitRaw) => ({
+        id: benefit.benefits_ID,
+        level: benefit.level_ID,
+        name: benefit.benefitName,
+        description: benefit.description,
+      }))
+    })
+    .catch((error) => {
+      console.error('Error fetching benefits', error)
+    })
+
+  UserServices.getServicesByLevel(level.value)
+    .then((response) => {
+      services.value = response.data.map((service: ServiceRaw) => ({
+        id: service.service_ID,
+        level: service.level_ID,
+        name: service.serviceName,
+        description: service.description,
+      }))
+    })
+    .catch((error) => {
+      console.error('Error fetching services', error)
+    })
+})
 
 const goBack = () => {
   router.push({ name: 'admin-level', params: { id: route.params.id } })

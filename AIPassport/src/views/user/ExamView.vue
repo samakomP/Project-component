@@ -35,8 +35,8 @@ const currentLevel = computed(() => getExamLevel(route.params.level, user.value?
 const questions = ref<ExamQuestion[]>([])
 const currentQuestionIndex = ref(0)
 
-function loadQuestions() {
-  examStore.startExam(currentLevel.value)
+async function loadQuestions() {
+  await examStore.startExam(currentLevel.value)
   questions.value = examStore.questions.map(question => ({
     id: question.id,
     text: question.question,
@@ -86,11 +86,11 @@ const prevQuestion = () => {
   }
 }
 
-const nextQuestion = () => {
+const nextQuestion = async () => {
   if (!isLastQuestion.value) {
     currentQuestionIndex.value++
   } else if (allAnswered.value) {
-    submitExam()
+    await submitExam()
   }
 }
 
@@ -98,11 +98,9 @@ const goToQuestion = (index: number) => {
   currentQuestionIndex.value = index
 }
 
-function submitExam() {
-  if (!user.value) return
-
-  examStore.submitExam(user.value.id, currentLevel.value)
-  router.push({ name: 'result-view', params: { id: user.value.id, level: currentLevel.value } })
+async function submitExam() {
+  await examStore.submitExam(user.value!.id, currentLevel.value)
+  router.push({ name: 'result-view', params: { id: user.value!.id, level: currentLevel.value } })
 }
 
 function quitExam() {

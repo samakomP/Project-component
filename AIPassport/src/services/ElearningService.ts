@@ -1,14 +1,16 @@
-import { e_learning } from '@/mock/e_learning'
-import type { ELearning } from '@/types'
+import axios from 'axios'
 
-export function getELearningByLevel(level: number): ELearning[] {
-  return e_learning
-    .filter(content => content.level_ID === level)
-    .map(content => ({
-      id: content.e_learning_ID,
-      level: content.level_ID,
-      title: content.e_learning_title,
-      description: `Video content for ${content.e_learning_title}`,
-      videoUrl: content.e_learning_videoUrl,
-    }))
+const apiClient = axios.create({
+    baseURL:'https://my-json-server.typicode.com/Prototean/Project-331-Learning',
+    withCredentials: false,
+    headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+    }
+})
+
+export default {
+    getELearningByLevel(level: number) {
+        return apiClient.get(`/e_learning?level_ID=${level}`)
+    }
 }

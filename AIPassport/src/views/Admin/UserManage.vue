@@ -2,7 +2,8 @@
 import { ref, computed, onMounted, watchEffect } from 'vue'
 import { useRoute, useRouter, RouterLink } from 'vue-router'
 import CardBase from '@/components/CardBase.vue'
-import { getUsers } from '@/services/UserService'
+import UserService from '@/services/UserService'
+import type { User } from '@/types'
 
 const route = useRoute()
 const router = useRouter()
@@ -16,9 +17,35 @@ interface UserRow {
   province: string
 }
 
+interface UserRaw {
+  users_ID: number
+  username: string
+  FName: string
+  LName: string
+  province: string
+  profileImg: string
+  isActivate: boolean
+  level_ID: number
+}
 
+const allUsers = ref<User[]>([])
 const users = ref<UserRow[]>([])
 const totalUsers = ref(0)
+
+onMounted(() => {
+  UserService.getUsers().then((response) => {
+    allUsers.value = response.data.map((raw: UserRaw): User => ({
+      id: raw.users_ID,
+      username: raw.username,
+      name: raw.FName,
+      surname: raw.LName,
+      profileImage: raw.profileImg,
+      province: raw.province,
+      level: raw.level_ID,
+      active: raw.isActivate,
+    }))
+  })
+})
 
 const goBack = () => {
     router.push({ name: 'admin-home-view', params: { id: route.params.id } })
@@ -36,11 +63,11 @@ const levelFilter = computed(() => route.query.level ? Number(route.query.level)
 const provinceFilter = computed(() => (route.query.province as string) || null)
 
 const levelOptions = computed(() =>
-  Array.from(new Set(getUsers().map(user => user.level))).sort((a, b) => a - b)
+  Array.from(new Set(allUsers.value.map(user => user.level))).sort((a, b) => a - b)
 )
 
 const provinceOptions = computed(() =>
-  Array.from(new Set(getUsers().map(user => user.province))).sort()
+  Array.from(new Set(allUsers.value.map(user => user.province))).sort()
 )
 
 function setLevelFilter(event: Event) {
@@ -85,7 +112,7 @@ const mockUserService = async (
   levelValue: number | null,
   provinceValue: string | null
 ) => {
-  let allData: UserRow[] = getUsers().map(user => ({
+  let allData: UserRow[] = allUsers.value.map(user => ({
     id: user.id,
     name: `${user.name} ${user.surname}`,
     email: `${user.username}@gmail.com`,

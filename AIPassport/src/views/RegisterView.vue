@@ -17,17 +17,11 @@ const authData = ref<Auth>({
 })
 
 const handleRegister = async () => {
-  const role = await authStore.login(authData.value.username)
-  
-  if (role === 'admin') {
-    messageStore.updateMessage(`Registration successful! Welcome, Admin.`)
-    router.push('/admin')
-  } else if (role === 'user') {
-    messageStore.updateMessage(`Registration successful! Welcome to your profile.`)
-    router.push('/user')
-  } else {
-    messageStore.updateMessage(`Access Denied: Please use Admin1, user1, or user2.`)
-  }
+  authStore.register(authData.value.username, authData.value.password)
+
+  messageStore.updateMessage(`Registration successful! Welcome to your profile.`)
+  router.push({ name: 'userhome-view', params: { id: authStore.user?.id } })
+
   setTimeout(() => {
     messageStore.resetMessage()
   }, 3000)
@@ -56,7 +50,7 @@ const handleRegister = async () => {
             type="text" 
             required 
             class="w-full px-4 py-3 border border-gray-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
-            placeholder="Admin1, user1, or user2"
+            placeholder="Choose a username"
           />
         </div>
         

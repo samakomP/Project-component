@@ -1,19 +1,61 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia'
 import BackHome from '@/components/BackHome.vue'
-import { getLevels, getBenefitsByLevel } from '@/services/LevelService'
+import LevelService from '@/services/LevelService'
+import UserServices from '@/services/UserServices'
+import type { Benefit, Level } from '@/types'
+
+interface BenefitRaw {
+  benefits_ID: number
+  level_ID: number
+  benefitName: string
+  description: string
+}
+
+interface LevelRaw {
+  level_ID: number
+  levelNumber: number
+  passCriteria: number
+}
 
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
 
 const currentUserLevel = computed(() => user.value?.level || 2)
 
+const allBenefits = ref<Benefit[]>([])
+const levels = ref<Level[]>([])
+
+onMounted(() => {
+  UserServices.getBenefits()
+    .then((response) => {
+      allBenefits.value = response.data.map((benefit: BenefitRaw) => ({
+        id: benefit.benefits_ID,
+        level: benefit.level_ID,
+        name: benefit.benefitName,
+        description: benefit.description,
+      }))
+    })
+    .catch((error) => {
+      console.error('Error fetching benefits', error)
+    })
+
+  LevelService.getLevels().then((response) => {
+    levels.value = response.data.map((raw: LevelRaw): Level => ({
+      id: raw.level_ID,
+      levelNumber: raw.levelNumber,
+      name: `Level ${raw.levelNumber}`,
+      passCriteria: raw.passCriteria,
+    }))
+  })
+})
+
 const benefitsData = computed(() =>
-  getLevels().map(level => ({
+  levels.value.map(level => ({
     level: level.levelNumber,
-    benefits: getBenefitsByLevel(level.levelNumber),
+    benefits: allBenefits.value.filter(benefit => benefit.level === level.levelNumber),
   }))
 )
 </script>

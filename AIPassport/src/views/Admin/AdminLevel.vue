@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import CardBase from '@/components/CardBase.vue'
-import { getLevels } from '@/services/LevelService'
-import { getQuestionsByLevel } from '@/services/ExamService'
+import LevelService from '@/services/LevelService'
+import ExamService from '@/services/ExamService'
 import BackHome from '@/components/BackHome.vue'
 import { useAuthStore } from '@/stores/Auth'
 import { useMessageStore } from '@/stores/message'
@@ -14,15 +14,32 @@ import { storeToRefs } from 'pinia'
 const messageStore = useMessageStore()
 const { messageEdit } = storeToRefs(messageStore)
 
+interface LevelRow {
+  id: number
+  level: number
+  passRate: string
+  totalQuestions: number
+}
 
-const levelsData = computed(() =>
-  getLevels().map(level => ({
-    id: level.id,
-    level: level.levelNumber,
-    passRate: `${level.passCriteria}% Pass`,
-    totalQuestions: getQuestionsByLevel(level.levelNumber).length,
-  }))
-)
+interface LevelRaw {
+  level_ID: number
+  levelNumber: number
+  passCriteria: number
+}
+
+const levelsData = ref<LevelRow[]>([])
+
+onMounted(async () => {
+  const levelsResponse = await LevelService.getLevels()
+  levelsData.value = await Promise.all(
+    levelsResponse.data.map(async (level: LevelRaw) => ({
+      id: level.level_ID,
+      level: level.levelNumber,
+      passRate: `${level.passCriteria}% Pass`,
+      totalQuestions: (await ExamService.getQuestionsByLevel(level.levelNumber)).data.length,
+    }))
+  )
+})
 
 const authStore = useAuthStore()
 </script>

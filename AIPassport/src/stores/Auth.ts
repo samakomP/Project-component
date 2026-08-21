@@ -1,25 +1,42 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
+import UserService from '@/services/UserService'
+import { useUserStore } from '@/stores/user'
 
 
 export const useAuthStore = defineStore('auth', () => {
   const storedUser = localStorage.getItem('auth_user')
 const user = ref<{ id:number; username: string; role: string } | null>(storedUser ? JSON.parse(storedUser) : null)
-  const login = async (username: string) => {
 
+  function setSession(id: number, username: string, role: string) {
+    user.value = { id, username, role }
+    localStorage.setItem('auth_user', JSON.stringify(user.value))
+  }
 
-    if (username === 'Admin1') {
-      user.value = { id:1, username: username, role: 'admin' }
-      localStorage.setItem('auth_user', JSON.stringify(user.value))
-      return 'admin'
-    }
-    else if (username === 'user1' || username === 'user2') {
-      user.value = { id:2, username: username, role: 'user' }
-      localStorage.setItem('auth_user', JSON.stringify(user.value))
+  const login = async (username: string, password: string) => {
+    const userStore = useUserStore()
+    const localAccount = userStore.findLocalAccountByCredentials(username, password)
+    if (localAccount) {
+      setSession(localAccount.id, localAccount.username, 'user')
       return 'user'
     }
-    
-    return null
+
+    const response = await UserService.getUserByUsername(username)
+    const raw = response.data[0]
+
+    if (!raw || raw.password !== password) {
+      return null
+    }
+
+    setSession(raw.users_ID, raw.username, raw.role)
+    return raw.role
+  }
+
+  const register = (username: string, password: string) => {
+    const userStore = useUserStore()
+    const newAccount = userStore.registerUser(username, password)
+    setSession(newAccount.id, newAccount.username, 'user')
+    return 'user'
   }
 
   const logout = () => {
@@ -27,5 +44,5 @@ const user = ref<{ id:number; username: string; role: string } | null>(storedUse
     localStorage.removeItem('auth_user')
   }
 
-  return { user, login, logout }
+  return { user, login, register, logout }
 })

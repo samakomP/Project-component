@@ -1,13 +1,42 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import CardBase from '@/components/CardBase.vue'
-import { getUsers } from '@/services/UserService'
+import UserService from '@/services/UserService'
+import type { User } from '@/types'
+
+interface UserRaw {
+  users_ID: number
+  username: string
+  FName: string
+  LName: string
+  province: string
+  profileImg: string
+  isActivate: boolean
+  level_ID: number
+}
 
 const route = useRoute()
 
-const totalUsers = computed(() => getUsers().length)
-const activeUsers = computed(() => getUsers().filter(user => user.active).length)
+const users = ref<User[]>([])
+
+onMounted(() => {
+  UserService.getUsers().then((response) => {
+    users.value = response.data.map((raw: UserRaw): User => ({
+      id: raw.users_ID,
+      username: raw.username,
+      name: raw.FName,
+      surname: raw.LName,
+      profileImage: raw.profileImg,
+      province: raw.province,
+      level: raw.level_ID,
+      active: raw.isActivate,
+    }))
+  })
+})
+
+const totalUsers = computed(() => users.value.length)
+const activeUsers = computed(() => users.value.filter(user => user.active).length)
 </script>
 
 <template>

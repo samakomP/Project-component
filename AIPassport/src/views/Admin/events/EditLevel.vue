@@ -1,9 +1,30 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import CardBase from '@/components/CardBase.vue'
-import { getPassCriteria, getBenefitsByLevel, getServicesByLevel } from '@/services/LevelService'
+import LevelService from '@/services/LevelService'
+import UserServices from '@/services/UserServices'
 import { useMessageStore } from '@/stores/message'
+
+interface BenefitRaw {
+  benefits_ID: number
+  level_ID: number
+  benefitName: string
+  description: string
+}
+
+interface LevelRaw {
+  level_ID: number
+  levelNumber: number
+  passCriteria: number
+}
+
+interface ServiceRaw {
+  service_ID: number
+  level_ID: number
+  serviceName: string
+  description: string
+}
 
 const route = useRoute()
 const router = useRouter()
@@ -11,15 +32,37 @@ const messageStore = useMessageStore()
 
 const level = computed(() => Number(route.params.level))
 
-const passRate = ref(getPassCriteria(level.value))
+const passRate = ref(0)
 
-const benefitsText = ref(
-  getBenefitsByLevel(level.value).map(benefit => `• ${benefit.name}`).join('\n')
-)
+const benefitsText = ref('')
+const servicesText = ref('')
 
-const servicesText = ref(
-  getServicesByLevel(level.value).map(service => `• ${service.name}\n${service.description}`).join('\n\n')
-)
+onMounted(() => {
+  LevelService.getLevelByNumber(level.value).then((response) => {
+    const raw = response.data[0] as LevelRaw
+    passRate.value = raw.passCriteria
+  })
+
+  UserServices.getBenefitsByLevel(level.value)
+    .then((response) => {
+      benefitsText.value = response.data
+        .map((benefit: BenefitRaw) => `• ${benefit.benefitName}`)
+        .join('\n')
+    })
+    .catch((error) => {
+      console.error('Error fetching benefits', error)
+    })
+
+  UserServices.getServicesByLevel(level.value)
+    .then((response) => {
+      servicesText.value = response.data
+        .map((service: ServiceRaw) => `• ${service.serviceName}\n${service.description}`)
+        .join('\n\n')
+    })
+    .catch((error) => {
+      console.error('Error fetching services', error)
+    })
+})
 
 const handleSave = () => {
   messageStore.updateMessageEdit('Level details updated!')

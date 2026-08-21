@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia'
+import type { ELearning } from '@/types'
 
 import BackHome from '@/components/BackHome.vue'
-import { getELearningByLevel } from '@/services/ElearningService'
+import ElearningService from '@/services/ElearningService'
 
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
@@ -17,7 +18,30 @@ function getYoutubeThumbnail(url: string) {
   return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : ''
 }
 
-const videos = computed(() => getELearningByLevel(currentUserLevel.value))
+const videos = ref<ELearning[]>([])
+
+interface ELearningRaw {
+  e_learning_ID: number
+  level_ID: number
+  e_learning_title: string
+  e_learning_videoUrl: string
+}
+
+onMounted(() => {
+  ElearningService.getELearningByLevel(currentUserLevel.value)
+    .then((response) => {
+      videos.value = response.data.map((content: ELearningRaw) => ({
+        id: content.e_learning_ID,
+        level: content.level_ID,
+        title: content.e_learning_title,
+        description: `Video content for ${content.e_learning_title}`,
+        videoUrl: content.e_learning_videoUrl,
+      }))
+    })
+    .catch((error) => {
+      console.error('Error fetching e-learning content', error)
+    })
+})
 
 const completedIds = ref<Set<number>>(new Set())
 

@@ -1,12 +1,18 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import CardBase from '@/components/CardBase.vue'
 import { useUserStore } from '@/stores/user'
 import { useExamStore } from '@/stores/Exam'
 import { getExamLevel } from '@/services/ExamService'
-import { getPassCriteria } from '@/services/LevelService'
+import LevelService from '@/services/LevelService'
+
+interface LevelRaw {
+  level_ID: number
+  levelNumber: number
+  passCriteria: number
+}
 
 const route = useRoute()
 const router = useRouter()
@@ -17,8 +23,18 @@ const examStore = useExamStore()
 const currentLevel = computed(() => getExamLevel(route.params.level, user.value?.level))
 
 const score = computed(() => examStore.score ?? 0)
-const requiredScore = computed(() => getPassCriteria(currentLevel.value))
+const requiredScore = ref(0)
 const isPass = computed(() => examStore.result === 'PASS')
+
+watch(
+  currentLevel,
+  (level) => {
+    LevelService.getLevelByNumber(level).then((response) => {
+      requiredScore.value = (response.data[0] as LevelRaw).passCriteria
+    })
+  },
+  { immediate: true }
+)
 
 const goHome = () => {
   router.push({ name: 'userhome-view', params: { id: user.value?.id } })

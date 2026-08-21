@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import CardBase from '@/components/CardBase.vue'
@@ -8,8 +8,14 @@ import StatTile from '@/components/StatTile.vue'
 import AttemptField from '@/components/AttemptField.vue'
 import BackHome from '@/components/BackHome.vue'
 import { useUserStore } from '@/stores/user'
-import { getExamLevel, getQuestionsByLevel, getExamHistoryByUser } from '@/services/ExamService'
-import { getPassCriteria } from '@/services/LevelService'
+import ExamService, { getExamLevel } from '@/services/ExamService'
+import LevelService from '@/services/LevelService'
+
+interface LevelRaw {
+  level_ID: number
+  levelNumber: number
+  passCriteria: number
+}
 
 const route = useRoute()
 const userStore = useUserStore()
@@ -17,25 +23,59 @@ const { user } = storeToRefs(userStore)
 
 const currentLevel = computed(() => getExamLevel(route.params.level, user.value?.level))
 
-const totalQuestions = computed(() => getQuestionsByLevel(currentLevel.value).length)
-const passScore = computed(() => getPassCriteria(currentLevel.value))
+const totalQuestions = ref(0)
+const passScore = ref(0)
 
-const lastAttempt = computed(() => {
-  if (!user.value) return null
+watch(
+  currentLevel,
+  (level) => {
+    ExamService.getQuestionsByLevel(level).then((response) => {
+      totalQuestions.value = response.data.length
+    })
+    LevelService.getLevelByNumber(level).then((response) => {
+      passScore.value = (response.data[0] as LevelRaw).passCriteria
+    })
+  },
+  { immediate: true }
+)
 
-  const attempts = getExamHistoryByUser(user.value.id)
-    .filter(entry => entry.level === currentLevel.value)
-    .sort((a, b) => new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime())
+interface LastAttempt {
+  status: string
+  score: number
+  date: string
+}
 
-  const latest = attempts[0]
-  if (!latest) return null
+interface ExamHistoryRaw {
+  exam_ID: number
+  users_ID: number
+  level_ID: number
+  score: number
+  result: string
+  timestamp: string
+}
 
-  return {
-    status: latest.result === 'PASS' ? 'Pass(✓)' : 'Fail(X)',
-    score: latest.score,
-    date: formatDate(latest.dateTime),
-  }
-})
+const lastAttempt = ref<LastAttempt | null>(null)
+
+watch(
+  [currentLevel, user],
+  ([level, currentUser]) => {
+    ExamService.getExamHistoryByUser(currentUser!.id).then((response) => {
+      const attempts = (response.data as ExamHistoryRaw[])
+        .filter(entry => entry.level_ID === level)
+        .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+
+      const latest = attempts[0]
+      lastAttempt.value = latest
+        ? {
+            status: latest.result.toUpperCase() === 'PASS' ? 'Pass(✓)' : 'Fail(X)',
+            score: latest.score,
+            date: formatDate(latest.timestamp),
+          }
+        : null
+    })
+  },
+  { immediate: true }
+)
 
 const instructions = computed(() => {
   const list = [

@@ -1,8 +1,17 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref, watch } from 'vue'
 import CardBase from '@/components/CardBase.vue'
 import PillLevel from '@/components/PillLevel.vue'
-import { getExamHistoryByUser, getQuestionsByLevel } from '@/services/ExamService'
+import ExamService from '@/services/ExamService'
+
+interface ExamHistoryRaw {
+  exam_ID: number
+  users_ID: number
+  level_ID: number
+  score: number
+  result: string
+  timestamp: string
+}
 
 const props = defineProps<{
   userId: number
@@ -15,25 +24,43 @@ function formatDate(dateTime: string) {
   return `${day}-${month}-${date.getFullYear()}`
 }
 
-const attempts = computed(() =>
-  getExamHistoryByUser(props.userId)
-    .sort((a, b) => new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime())
-    .map(entry => {
-      const totalQuestions = getQuestionsByLevel(entry.level).length
+interface Attempt {
+  id: number
+  level: number
+  date: string
+  passed: boolean
+  correctAnswers: number
+  wrongAnswers: number
+}
+
+const attempts = ref<Attempt[]>([])
+
+async function loadAttempts(userId: number) {
+  const historyResponse = await ExamService.getExamHistoryByUser(userId)
+  const history = (historyResponse.data as ExamHistoryRaw[])
+    .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+
+  attempts.value = await Promise.all(
+    history.map(async entry => {
+      const questionsResponse = await ExamService.getQuestionsByLevel(entry.level_ID)
+      const totalQuestions = questionsResponse.data.length
       const correctAnswers = totalQuestions > 0
         ? Math.round((entry.score / 100) * totalQuestions)
         : 0
 
       return {
-        id: entry.id,
-        level: entry.level,
-        date: formatDate(entry.dateTime),
-        passed: entry.result === 'PASS',
+        id: entry.exam_ID,
+        level: entry.level_ID,
+        date: formatDate(entry.timestamp),
+        passed: entry.result.toUpperCase() === 'PASS',
         correctAnswers,
         wrongAnswers: totalQuestions - correctAnswers,
       }
     })
-)
+  )
+}
+
+watch(() => props.userId, loadAttempts, { immediate: true })
 </script>
 
 <template>

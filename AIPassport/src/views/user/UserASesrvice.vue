@@ -1,15 +1,38 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import CardBase from '@/components/CardBase.vue'
 import PillLevel from '@/components/PillLevel.vue'
 import { useUserStore } from '@/stores/user'
-import { getServicesByLevel } from '@/services/LevelService'
+import UserServices from '@/services/UserServices'
+import type { Service } from '@/types'
+
+interface ServiceRaw {
+  service_ID: number
+  level_ID: number
+  serviceName: string
+  description: string
+}
 
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
 
-const services = computed(() => getServicesByLevel(user.value?.level ?? 0))
+const services = ref<Service[]>([])
+
+onMounted(() => {
+  UserServices.getServicesByLevel(user.value?.level ?? 0)
+    .then((response) => {
+      services.value = response.data.map((service: ServiceRaw) => ({
+        id: service.service_ID,
+        level: service.level_ID,
+        name: service.serviceName,
+        description: service.description,
+      }))
+    })
+    .catch((error) => {
+      console.error('Error fetching services', error)
+    })
+})
 
 const userInput = ref('')
 

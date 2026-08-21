@@ -1,9 +1,22 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import CardBase from '@/components/CardBase.vue'
-import { getQuestionsByLevel } from '@/services/ExamService'
+import ExamService from '@/services/ExamService'
 import { useMessageStore } from '@/stores/message'
+
+interface QuestionRaw {
+  questions_ID: number
+  level_ID: number
+  questionText: string
+  correctAnswer: string
+}
+
+interface QuestionOptionRaw {
+  option_ID: number
+  question_ID: number
+  optionText: string
+}
 
 const messageStore = useMessageStore();
 
@@ -14,18 +27,33 @@ const router = useRouter()
 
 const level = computed(() => Number(route.params.level))
 
-const questions = ref(
-  getQuestionsByLevel(level.value).map((question, index) => ({
-    id: question.id,
+const questions = ref<{
+  id: number
+  number: number
+  text: string
+  answer: string
+  choices: { letter: string; text: string }[]
+}[]>([])
+
+onMounted(async () => {
+  const [questionsResponse, optionsResponse] = await Promise.all([
+    ExamService.getQuestionsByLevel(level.value),
+    ExamService.getQuestionOptions(),
+  ])
+
+  questions.value = (questionsResponse.data as QuestionRaw[]).map((raw, index) => ({
+    id: raw.questions_ID,
     number: index + 1,
-    text: question.question,
-    answer: question.answer,
-    choices: question.choices.map((choice, choiceIndex) => ({
-      letter: ANSWER_LETTERS[choiceIndex] ?? String(choiceIndex + 1),
-      text: choice,
-    })),
+    text: raw.questionText,
+    answer: raw.correctAnswer,
+    choices: (optionsResponse.data as QuestionOptionRaw[])
+      .filter(option => option.question_ID === raw.questions_ID)
+      .map((option, choiceIndex) => ({
+        letter: ANSWER_LETTERS[choiceIndex] ?? String(choiceIndex + 1),
+        text: option.optionText,
+      })),
   }))
-)
+})
 
 const goBack = () => {
     router.push({ name: 'admin-level', params: { id: route.params.id } })

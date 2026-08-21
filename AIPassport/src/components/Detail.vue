@@ -1,12 +1,43 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { getUserById } from '@/services/UserService'
+import { ref, watch } from 'vue'
+import type { User } from '@/types'
+import UserService from '@/services/UserService'
+
+interface UserRaw {
+  users_ID: number
+  username: string
+  FName: string
+  LName: string
+  province: string
+  profileImg: string
+  isActivate: boolean
+  level_ID: number
+}
 
 const props = defineProps<{
   userId: number
 }>()
 
-const user = computed(() => getUserById(props.userId))
+const user = ref<User | undefined>()
+
+watch(
+  () => props.userId,
+  (id) => {
+    UserService.getUserById(id).then((response) => {
+      user.value = response.data.map((raw: UserRaw): User => ({
+        id: raw.users_ID,
+        username: raw.username,
+        name: raw.FName,
+        surname: raw.LName,
+        profileImage: raw.profileImg,
+        province: raw.province,
+        level: raw.level_ID,
+        active: raw.isActivate,
+      }))[0]
+    })
+  },
+  { immediate: true }
+)
 </script>
 
 <template>

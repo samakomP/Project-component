@@ -1,18 +1,53 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
-import {
-  getQuestionsByLevel,
-  calculateScore,
-  saveExamHistory,
-  getExamHistoryByUser,
-} from '@/services/ExamService'
-
-import { getPassCriteria } from '@/services/LevelService'
+import ExamService from '@/services/ExamService'
+import LevelService from '@/services/LevelService'
 
 import type { Question, ExamHistory } from '@/types'
 
-import { useAuthStore } from '@/stores/Auth'
+import { useUserStore } from '@/stores/user'
+
+const ANSWER_LETTERS = ['A', 'B']
+
+interface QuestionRaw {
+  questions_ID: number
+  level_ID: number
+  questionText: string
+  correctAnswer: string
+}
+
+interface QuestionOptionRaw {
+  option_ID: number
+  question_ID: number
+  optionText: string
+}
+
+interface LevelRaw {
+  level_ID: number
+  levelNumber: number
+  passCriteria: number
+}
+
+interface ExamHistoryRaw {
+  exam_ID: number
+  users_ID: number
+  level_ID: number
+  score: number
+  result: string
+  timestamp: string
+}
+
+function toExamHistory(raw: ExamHistoryRaw): ExamHistory {
+  return {
+    id: raw.exam_ID,
+    userId: raw.users_ID,
+    level: raw.level_ID,
+    score: raw.score,
+    result: raw.result.toUpperCase() as 'PASS' | 'FAIL',
+    dateTime: raw.timestamp,
+  }
+}
 
 export const useExamStore = defineStore('exam', () => {
   const questions = ref<Question[]>([])
@@ -23,8 +58,21 @@ export const useExamStore = defineStore('exam', () => {
 
   const history = ref<ExamHistory[]>([])
 
-  function startExam(level: number) {
-    questions.value = getQuestionsByLevel(level)
+  async function startExam(level: number) {
+    const [questionsResponse, optionsResponse] = await Promise.all([
+      ExamService.getQuestionsByLevel(level),
+      ExamService.getQuestionOptions(),
+    ])
+
+    questions.value = (questionsResponse.data as QuestionRaw[]).map(raw => ({
+      id: raw.questions_ID,
+      level: raw.level_ID,
+      question: raw.questionText,
+      choices: (optionsResponse.data as QuestionOptionRaw[])
+        .filter(option => option.question_ID === raw.questions_ID)
+        .map(option => option.optionText),
+      answer: raw.correctAnswer,
+    }))
 
     answers.value = {}
     score.value = null
@@ -35,43 +83,49 @@ export const useExamStore = defineStore('exam', () => {
     answers.value[questionId] = answer
   }
 
-  function submitExam(userId: number, level: number) {
-    score.value = calculateScore(answers.value, level)
-
-    const passCriteria = getPassCriteria(level)
-
-    if (calculateScore.value >= passCriteria) {
-      result.value = 'PASS'
+  async function submitExam(userId: number, level: number) {
+    if (questions.value.length === 0) {
+      score.value = 0
     } else {
-      result.value = 'FAIL'
+      const correctCount = questions.value.filter(question => {
+        const answerIndex = ANSWER_LETTERS.indexOf(question.answer)
+        const correctChoice = question.choices[answerIndex]
+        return answers.value[question.id] === correctChoice
+      }).length
+      score.value = Math.round((correctCount / questions.value.length) * 100)
     }
 
-    const record: ExamHistory = {
+    const levelResponse = await LevelService.getLevelByNumber(level)
+    const passCriteria = (levelResponse.data[0] as LevelRaw).passCriteria
+
+    result.value = score.value >= passCriteria ? 'PASS' : 'FAIL'
+
+    await ExamService.saveExamHistory({
       id: Date.now(),
-      userId: userId,
-      level: level,
+      exam_ID: Date.now(),
+      users_ID: userId,
+      level_ID: level,
       score: score.value,
-      result: result.value,
-      dateTime: new Date().toISOString(),
-    }
+      result: result.value.toLowerCase(),
+      timestamp: new Date().toISOString(),
+    })
 
-    saveExamHistory(record)
-    history.value = getExamHistoryByUser(userId)
+    const historyResponse = await ExamService.getExamHistoryByUser(userId)
+    history.value = (historyResponse.data as ExamHistoryRaw[]).map(toExamHistory)
 
     if (result.value === 'PASS') {
-      const authStore = useAuthStore()
-      if (authStore.user) {
-        if (authStore.user.id === userId) {
-          authStore.upgradeLevel()
-        }
+      const userStore = useUserStore()
+      if (userStore.user!.id === userId && userStore.user!.level < 4) {
+        await userStore.updateUserData(userId, { level: userStore.user!.level + 1 })
       }
     }
 
     return result.value
   }
 
-  function loadHistory(userId: number) {
-    history.value = getExamHistoryByUser(userId)
+  async function loadHistory(userId: number) {
+    const historyResponse = await ExamService.getExamHistoryByUser(userId)
+    history.value = (historyResponse.data as ExamHistoryRaw[]).map(toExamHistory)
   }
 
   return {

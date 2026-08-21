@@ -1,11 +1,37 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import UserProfileLayout from '@/components/UserProfileCard.vue'
-import { getUserById, activateUser, deactivateUser } from '@/services/UserService'
+import UserService from '@/services/UserService'
+import { useUserStore } from '@/stores/user'
+import type { User } from '@/types'
 
 import { storeToRefs } from 'pinia'
 import { useMessageStore } from '@/stores/message'
+
+interface UserRaw {
+  users_ID: number
+  username: string
+  FName: string
+  LName: string
+  province: string
+  profileImg: string
+  isActivate: boolean
+  level_ID: number
+}
+
+function toUser(raw: UserRaw): User {
+  return {
+    id: raw.users_ID,
+    username: raw.username,
+    name: raw.FName,
+    surname: raw.LName,
+    profileImage: raw.profileImg,
+    province: raw.province,
+    level: raw.level_ID,
+    active: raw.isActivate,
+  }
+}
 
 const store = useMessageStore()
 
@@ -15,15 +41,25 @@ const route = useRoute()
 const router = useRouter()
 
 const userId = computed(() => Number(route.params.userId))
-const targetUser = ref(getUserById(userId.value))
+const targetUser = ref<User | undefined>()
+
+watch(
+  userId,
+  (id) => {
+    UserService.getUserById(id).then((response) => {
+      targetUser.value = response.data.map(toUser)[0]
+    })
+  },
+  { immediate: true }
+)
 
 const adminViewUser = computed(() => ({
-  id: targetUser.value?.id ?? 0,
-  name: targetUser.value?.name ?? '',
-  surname: targetUser.value?.surname ?? '',
-  level: targetUser.value?.level ?? 0,
+  id: targetUser.value!.id,
+  name: targetUser.value!.name,
+  surname: targetUser.value!.surname,
+  level: targetUser.value!.level,
   joinDate: '05-1-2025',
-  active: targetUser.value?.active ?? true,
+  active: targetUser.value!.active,
 }))
 
 const adminLinks = [
@@ -32,15 +68,9 @@ const adminLinks = [
 ]
   const goBack = () => {router.push({ name: 'admin-management', params: { id: route.params.id } })}
 
-const toggleActive = () => {
-  if (!targetUser.value) return
-
-  if (targetUser.value.active) {
-    deactivateUser(targetUser.value.id)
-  } else {
-    activateUser(targetUser.value.id)
-  }
-  targetUser.value = getUserById(userId.value)
+const toggleActive = async () => {
+  targetUser.value!.active = !targetUser.value!.active
+  await useUserStore().updateUserData(targetUser.value!.id, { active: targetUser.value!.active })
 }
 </script>
 
