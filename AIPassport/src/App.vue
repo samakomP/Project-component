@@ -5,7 +5,7 @@ import { useMessageStore } from '@/stores/message'
 
 import { storeToRefs } from 'pinia'
 import Navbar from '@/components/NavBar.vue'
-
+import { Analytics } from '@vercel/analytics/vue';
 
 const store = useMessageStore()
 
@@ -14,6 +14,7 @@ const { message } = storeToRefs(store)
 </script>
 
 <template>
+  <Analytics />
   <SpeedInsights />
   <Navbar />
   <div id="flashMessage" v-if="message"
