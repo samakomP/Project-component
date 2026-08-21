@@ -12,6 +12,8 @@ import { getPassCriteria } from '@/services/LevelService'
 
 import type { Question, ExamHistory } from '@/types'
 
+import { useAuthStore } from '@/stores/Auth'
+
 export const useExamStore = defineStore('exam', () => {
   const questions = ref<Question[]>([])
   const answers = ref<Record<number, string>>({})
@@ -34,27 +36,36 @@ export const useExamStore = defineStore('exam', () => {
   }
 
   function submitExam(userId: number, level: number) {
-    score.value = calculateScore(
-      answers.value,
-      level
-    )
+    score.value = calculateScore(answers.value, level)
 
     const passCriteria = getPassCriteria(level)
 
-    result.value = score.value! >= passCriteria ? 'PASS' : 'FAIL'
+    if (calculateScore.value >= passCriteria) {
+      result.value = 'PASS'
+    } else {
+      result.value = 'FAIL'
+    }
 
     const record: ExamHistory = {
       id: Date.now(),
-      userId,
-      level,
-      score: score.value!,
+      userId: userId,
+      level: level,
+      score: score.value,
       result: result.value,
       dateTime: new Date().toISOString(),
     }
 
     saveExamHistory(record)
-
     history.value = getExamHistoryByUser(userId)
+
+    if (result.value === 'PASS') {
+      const authStore = useAuthStore()
+      if (authStore.user) {
+        if (authStore.user.id === userId) {
+          authStore.upgradeLevel()
+        }
+      }
+    }
 
     return result.value
   }
