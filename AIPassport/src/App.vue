@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { SpeedInsights } from '@vercel/speed-insights/vue'
 import { RouterView } from 'vue-router'
 import { useMessageStore } from '@/stores/message'
 
@@ -13,6 +14,7 @@ const { message } = storeToRefs(store)
 </script>
 
 <template>
+  <SpeedInsights />
   <Navbar />
   <div id="flashMessage" v-if="message"
     class="fixed top-3 left-1/2 -translate-x-1/2 w-fit z-50 shadow-md rounded-3xl px-6 py-3 bg-yellow-200">
