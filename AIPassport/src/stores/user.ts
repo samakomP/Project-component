@@ -33,6 +33,7 @@ interface LocalAccount extends User {
 }
 
 const LOCAL_ACCOUNTS_KEY = 'local_registered_users'
+const USER_OVERRIDES_KEY = 'user_overrides'
 
 function getLocalAccounts(): LocalAccount[] {
   const raw = localStorage.getItem(LOCAL_ACCOUNTS_KEY)
@@ -43,6 +44,25 @@ function saveLocalAccounts(accounts: LocalAccount[]) {
   localStorage.setItem(LOCAL_ACCOUNTS_KEY, JSON.stringify(accounts))
 }
 
+function getOverrides(): Record<string, Partial<User>> {
+  const raw = localStorage.getItem(USER_OVERRIDES_KEY)
+  return raw ? JSON.parse(raw) : {}
+}
+
+function saveOverride(id: number, data: Partial<User>) {
+  const overrides = getOverrides()
+  overrides[id] = { ...overrides[id], ...data }
+  localStorage.setItem(USER_OVERRIDES_KEY, JSON.stringify(overrides))
+}
+
+function applyOverride(user: User): User {
+  return { ...user, ...getOverrides()[user.id] }
+}
+
+export function clearUserOverrides() {
+  localStorage.removeItem(USER_OVERRIDES_KEY)
+}
+
 export const useUserStore = defineStore('user', () => {
   const users = ref<User[]>([])
 
@@ -51,13 +71,15 @@ export const useUserStore = defineStore('user', () => {
   async function setUser(userId: number): Promise<User | undefined> {
     const localAccount = getLocalAccounts().find(a => a.id === userId)
     if (localAccount) {
-      user.value = localAccount
-      return localAccount
+      const merged = applyOverride(localAccount)
+      user.value = merged
+      return merged
     }
     const response = await UserService.getUserById(userId)
     const found = response.data.map(toUser)[0] as User | undefined
-    user.value = found ?? null
-    return found
+    const merged = found ? applyOverride(found) : undefined
+    user.value = merged ?? null
+    return merged
   }
 
   function registerUser(username: string, password: string): User {
@@ -84,6 +106,8 @@ export const useUserStore = defineStore('user', () => {
   }
 
   async function updateUserData(id: number, data: Partial<User>) {
+    saveOverride(id, data)
+
     if (user.value?.id === id) {
       user.value = { ...user.value, ...data }
     }

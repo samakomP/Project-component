@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import UserService from '@/services/UserService'
-import { useUserStore } from '@/stores/user'
+import { useUserStore, clearUserOverrides } from '@/stores/user'
 
 
 export const useAuthStore = defineStore('auth', () => {
@@ -42,6 +42,8 @@ const user = ref<{ id:number; username: string; role: string } | null>(storedUse
   const logout = () => {
     user.value = null
     localStorage.removeItem('auth_user')
+    clearUserOverrides()
+    useUserStore().user = null
   }
 
   return { user, login, register, logout }

@@ -115,8 +115,10 @@ export const useExamStore = defineStore('exam', () => {
 
     if (result.value === 'PASS') {
       const userStore = useUserStore()
-      if (userStore.user!.id === userId && userStore.user!.level < 4) {
-        await userStore.updateUserData(userId, { level: userStore.user!.level + 1 })
+      const currentUser = userStore.user
+      const earnedLevel = Math.min(level + 1, 4)
+      if (currentUser && currentUser.id === userId && earnedLevel > currentUser.level) {
+        await userStore.updateUserData(userId, { level: earnedLevel })
       }
     }
 
