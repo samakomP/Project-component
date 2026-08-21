@@ -48,14 +48,16 @@ export const useUserStore = defineStore('user', () => {
 
   const user = ref<User | null>(null)
 
-  async function setUser(userId: number) {
+  async function setUser(userId: number): Promise<User | undefined> {
     const localAccount = getLocalAccounts().find(a => a.id === userId)
     if (localAccount) {
       user.value = localAccount
-      return
+      return localAccount
     }
     const response = await UserService.getUserById(userId)
-    user.value = response.data.map(toUser)[0] as User
+    const found = response.data.map(toUser)[0] as User | undefined
+    user.value = found ?? null
+    return found
   }
 
   function registerUser(username: string, password: string): User {

@@ -1,5 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+import type { RouteLocationNormalized, RouteLocationRaw } from 'vue-router'
 
+declare module 'vue-router' {
+  interface RouteMeta {
+    requiresAdmin?: boolean
+    validate?: (to: RouteLocationNormalized) => Promise<true | RouteLocationRaw>
+  }
+}
+
+import NotFoundView from '@/views/NotfoundView.vue'
+import NetworkErrorView from '@/views/NetworkErrorView.vue'
 import LoginView from '@/views/LoginView.vue'
 import RegisterView from '@/views/RegisterView.vue'
 import HomeView from '@/views/user/MainUser.vue'
@@ -28,7 +40,59 @@ import AdminEditview from '@/views/Admin/events/AdminEditview.vue'
 
 import CardBase from '@/components/CardBase.vue'
 import { useUserStore } from '@/stores/user'
-import UserASesrvice from '@/views/user/UserASesrvice.vue'
+import UserApi from '@/services/UserService'
+import LevelService from '@/services/LevelService'
+import { useAuthStore } from '@/stores/Auth'
+
+const notFound = (resource: string) => ({
+  name: '404-resource-view',
+  params: { resource },
+})
+
+const networkError = { name: 'network-error-view' }
+
+// Loads the :id user into the store. Sends to 404 when that user does not exist,
+// or to the network-error page when the API itself is unreachable.
+const requireUser = async (to: RouteLocationNormalized) => {
+  const userStore = useUserStore()
+  try {
+    const found = await userStore.setUser(Number(to.params.id))
+    return found ? true : notFound('user')
+  } catch {
+    return networkError
+  }
+}
+
+// Same as requireUser, plus a check that the :level in the URL is a real level.
+const requireUserAndLevel = async (to: RouteLocationNormalized) => {
+  const userCheck = await requireUser(to)
+  if (userCheck !== true) return userCheck
+
+  // :level is optional on the exam-view route.
+  if (!to.params.level) return true
+
+  try {
+    const response = await LevelService.getLevels()
+    const levels = response.data as { levelNumber: number }[]
+    const exists = levels.some(level => level.levelNumber === Number(to.params.level))
+    return exists ? true : notFound('level')
+  } catch {
+    return networkError
+  }
+}
+
+// Same as requireUser, plus a check that the :userId being viewed by an admin exists.
+const requireUserAndTargetUser = async (to: RouteLocationNormalized) => {
+  const userCheck = await requireUser(to)
+  if (userCheck !== true) return userCheck
+
+  try {
+    const response = await UserApi.getUserById(Number(to.params.userId))
+    return response.data.length > 0 ? true : notFound('user')
+  } catch {
+    return networkError
+  }
+}
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -48,88 +112,52 @@ const router = createRouter({
       component: CardBase
     },
     {
-      path: '/aservice',
-      name: 'user-aservice',
-      component: UserASesrvice
-    },
-    {
       path: '/home/:id',
       name: 'userhome-view',
       component: HomeView,
-      beforeEnter: (to) => {
-        const userStore = useUserStore()
-        return userStore.setUser(Number(to.params.id))
-      }
+      meta: { validate: requireUser }
     },
     {
       path: '/admin/:id',
       name: 'admin-home-view',
       component: AdminHomePage,
-      beforeEnter: (to) => {
-        const userStore = useUserStore()
-        return userStore.setUser(Number(to.params.id))
-      },
-      meta: { requiresAdmin: true }
+      meta: { requiresAdmin: true, validate: requireUser }
     },
     {
       path: '/admin/:id/level',
       name: 'admin-level',
       component: AdminLevel,
-      beforeEnter: (to) => {
-        const userStore = useUserStore()
-        return userStore.setUser(Number(to.params.id))
-      },
-      meta: { requiresAdmin: true }
+      meta: { requiresAdmin: true, validate: requireUser }
     },
     {
       path: '/admin/:id/level/:level',
       name: 'admin-level-detail',
       component: LevelDetail,
-      beforeEnter: (to) => {
-        const userStore = useUserStore()
-        return userStore.setUser(Number(to.params.id))
-      },
-      meta: { requiresAdmin: true }
+      meta: { requiresAdmin: true, validate: requireUserAndLevel }
     },
     {
       path: '/admin/:id/level/:level/edit',
       name: 'admin-edit-level',
       component: EditLevel,
-      beforeEnter: (to) => {
-        const userStore = useUserStore()
-        return userStore.setUser(Number(to.params.id))
-      },
-      meta: { requiresAdmin: true }
+      meta: { requiresAdmin: true, validate: requireUserAndLevel }
     },
     {
       path: '/admin/:id/level/:level/exam',
       name: 'admin-exam-detail',
       component: ExamDetail,
-      beforeEnter: (to) => {
-        const userStore = useUserStore()
-        return userStore.setUser(Number(to.params.id))
-      },
-      meta: { requiresAdmin: true }
+      meta: { requiresAdmin: true, validate: requireUserAndLevel }
     },
     {
       path: '/admin/:id/users',
       name: 'admin-management',
       component: UserManage,
-      beforeEnter: (to) => {
-        const userStore = useUserStore()
-        return userStore.setUser(Number(to.params.id))
-      },
-      meta: { requiresAdmin: true }
+      meta: { requiresAdmin: true, validate: requireUser }
     },
     {
       path: '/admin/:id/users/:userId',
       name: 'admin-user-profile',
       component: AdminUserProfile,
-      beforeEnter: (to) => {
-        const userStore = useUserStore()
-        return userStore.setUser(Number(to.params.id))
-      },
-      meta: { requiresAdmin: true },
+      meta: { requiresAdmin: true, validate: requireUserAndTargetUser },
       children: [
         {
           path: '',
@@ -156,47 +184,32 @@ const router = createRouter({
       path: '/exam/:id/:level?',
       name: 'exam-view',
       component: PrepExam,
-      beforeEnter: (to) => {
-        const userStore = useUserStore()
-        return userStore.setUser(Number(to.params.id))
-      }
+      meta: { validate: requireUserAndLevel }
     },
     {
       path: '/exam/:id/:level/take',
       name: 'take-exam-view',
       component: ExamView,
-      beforeEnter: (to) => {
-        const userStore = useUserStore()
-        return userStore.setUser(Number(to.params.id))
-      }
+      meta: { validate: requireUserAndLevel }
     },
     {
       path: '/exam/:id/:level/result',
       name: 'result-view',
       component: ResultView,
-      beforeEnter: (to) => {
-        const userStore = useUserStore()
-        return userStore.setUser(Number(to.params.id))
-      }
+      meta: { validate: requireUserAndLevel }
     },
     {
       path: '/e-learning/:id',
       name: 'learning-view',
       component: LearningView,
-      beforeEnter: (to) => {
-        const userStore = useUserStore()
-        return userStore.setUser(Number(to.params.id))
-      }
+      meta: { validate: requireUser }
     },
     {
       path: '/UserProfile/:id',
       name: 'userprofile-view',
       component: UserProfile,
       props: true,
-      beforeEnter: (to) => {
-        const userStore = useUserStore()
-        return userStore.setUser(Number(to.params.id))
-      },
+      meta: { validate: requireUser },
       children: [
         {
           path: '',
@@ -233,19 +246,29 @@ const router = createRouter({
       path: '/aservice/:id',
       name: 'user-aservice',
       component: UserAService,
-      beforeEnter: (to) => {
-        const userStore = useUserStore()
-        return userStore.setUser(Number(to.params.id))
-      }
+      meta: { validate: requireUser }
     },
     {
       path: '/levelNbenefit/:id',
       name: 'levelBenefit-view',
       component: LevelNBenefit,
-      beforeEnter: (to) => {
-        const userStore = useUserStore()
-        return userStore.setUser(Number(to.params.id))
-      }
+      meta: { validate: requireUser }
+    },
+    {
+      path: '/404/:resource',
+      name: '404-resource-view',
+      component: NotFoundView,
+      props: true
+    },
+    {
+      path: '/network-error',
+      name: 'network-error-view',
+      component: NetworkErrorView
+    },
+    {
+      path: '/:catchAll(.*)',
+      name: 'not-found-view',
+      component: NotFoundView
     }
 ],
 })
