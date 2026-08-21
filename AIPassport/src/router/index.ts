@@ -51,8 +51,6 @@ const notFound = (resource: string) => ({
 
 const networkError = { name: 'network-error-view' }
 
-// Loads the :id user into the store. Sends to 404 when that user does not exist,
-// or to the network-error page when the API itself is unreachable.
 const requireUser = async (to: RouteLocationNormalized) => {
   const userStore = useUserStore()
   try {
@@ -63,12 +61,10 @@ const requireUser = async (to: RouteLocationNormalized) => {
   }
 }
 
-// Same as requireUser, plus a check that the :level in the URL is a real level.
 const requireUserAndLevel = async (to: RouteLocationNormalized) => {
   const userCheck = await requireUser(to)
   if (userCheck !== true) return userCheck
 
-  // :level is optional on the exam-view route.
   if (!to.params.level) return true
 
   try {
@@ -81,7 +77,6 @@ const requireUserAndLevel = async (to: RouteLocationNormalized) => {
   }
 }
 
-// Same as requireUser, plus a check that the :userId being viewed by an admin exists.
 const requireUserAndTargetUser = async (to: RouteLocationNormalized) => {
   const userCheck = await requireUser(to)
   if (userCheck !== true) return userCheck
@@ -271,6 +266,36 @@ const router = createRouter({
       component: NotFoundView
     }
 ],
+})
+
+const publicRoutes = ['login-view', 'register-view', 'network-error-view']
+
+router.beforeEach(async (to) => {
+  NProgress.start()
+
+  const authStore = useAuthStore()
+
+  if (!publicRoutes.includes(String(to.name)) && !authStore.user) {
+    return { name: 'login-view' }
+  }
+
+  if (to.meta.requiresAdmin && authStore.user?.role !== 'admin') {
+    return { name: 'userhome-view', params: { id: authStore.user?.id } }
+  }
+
+  if (to.meta.validate) {
+    return await to.meta.validate(to)
+  }
+
+  return true
+})
+
+router.afterEach(() => {
+  NProgress.done()
+})
+
+router.onError(() => {
+  NProgress.done()
 })
 
 export default router

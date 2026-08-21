@@ -15,10 +15,6 @@ withDefaults(
 const router = useRouter()
 const authStore = useAuthStore()
 
-// Go back to wherever the user came from. The bad URL never entered history (the
-// guard redirected before committing it), so back() lands on the last good page.
-// With no history to go back to (pasted URL / fresh tab) fall back to their own
-// home rather than the login screen.
 const goBack = () => {
   if (window.history.state?.back) {
     router.back()

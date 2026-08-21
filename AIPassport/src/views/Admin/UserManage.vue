@@ -237,7 +237,6 @@ const mockUserService = async (
         </div>
       </CardBase>
 
-      <!-- Pagination Controls utilizing RouterLink -->
       <div class="w-full flex justify-between mt-6 px-2">
         <RouterLink
           :to="{ name: 'admin-management', params: { id: route.params.id }, query: { ...route.query, page: page - 1 } }"
@@ -247,7 +246,7 @@ const mockUserService = async (
         >
           Prev
         </RouterLink>
-        <div v-else></div> <!-- Spacer to keep Next on the right if Prev is hidden -->
+        <div v-else></div>
 
         <RouterLink
           :to="{ name: 'admin-management', params: { id: route.params.id }, query: { ...route.query, page: page + 1 } }"
